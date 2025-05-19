@@ -19,14 +19,14 @@ const App = () => {
       name: 'Night Blend',
       description: 'Wind down and sleep deeply with calming botanicals.',
       price: 26.99,
-      image: '/images/nightblend.jpg',
+      image: '/images/vitanixa_night_blend_product.png',
     },
     {
       id: 'bundle',
-      name: '3-Pack Bundle',
+      name: '2-Pack Bundle',
       description: 'Best value! Get both blends and more for your wellness journey.',
       price: 69.99,
-      image: '/images/bundle.jpg',
+      image: '/images/vitanixa_bundle.png',
     }
   ];
 
