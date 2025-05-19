@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import ProductImage from './components/ProductImage';
 
 const products = [
   {
@@ -72,7 +73,7 @@ const App = () => {
               className="p-4 bg-white rounded shadow hover:shadow-lg transition"
               whileHover={{ scale: 1.03 }}
             >
-              <img src={product.image} alt={product.name} className="rounded mb-4 w-full h-60 object-cover" />
+              <ProductImage src={product.image} alt={product.name} />
               <h3 className="text-xl font-semibold">{product.name}</h3>
               <p className="text-sm my-2">{product.description}</p>
               <p className="font-bold mb-2">${product.price.toFixed(2)}</p>
