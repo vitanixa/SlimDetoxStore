@@ -52,6 +52,25 @@ const App = () => {
       </header>
 
       <main className="p-8 max-w-6xl mx-auto">
+        {/* Motion Grid */}
+        <motion.section
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl font-bold mb-4">Naturally Cleanse. Deeply Nourish.</h2>
+          <p className="text-lg mb-6 max-w-2xl mx-auto">
+            Discover the power of herbal wellness with Vitanixa's signature blends—formulated to detox, calm, and rejuvenate your body from within.
+          </p>
+          <a
+            href="#shop"
+            className="bg-green-700 text-white px-6 py-3 rounded-lg text-lg hover:bg-green-800"
+          >
+            Shop Now
+          </a>
+        </motion.section>
+
         {/* Product Grid */}
         <section id="shop" className="grid gap-6 md:grid-cols-3">
           {products.map(product => (
