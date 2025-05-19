@@ -12,7 +12,7 @@ const App = () => {
       name: 'SlimDetox Tea',
       description: 'Flush toxins naturally with our herbal detox blend.',
       price: 24.99,
-      image: '/images/vitanixa_slimdetox_square.png',
+      image: '/images/vitanixa_slimdetox_product.png',
     },
     {
       id: 'night',
