@@ -20,18 +20,24 @@ const App = () => {
  
   const addToCart = (product, qty = 1) => {
     setCart((prev) => {
-      const currentQty = prev[product.id]?.quantity || 0;
-      toast.success(`${product.name} added to cart!`);
+      const existing = prev[product.id];
+      const quantity = (existing?.quantity || 0) + qty;
+
+      // 🧠 Use the original product info from the first add (if it exists)
       return {
         ...prev,
         [product.id]: {
-          ...product,
-          quantity: currentQty + qty,
-        },
+          id: product.id,
+          name: existing?.name || product.name,
+          image: existing?.image || product.image,
+          price: existing?.price || product.price,
+          quantity
+        }
       };
     });
-  };
 
+    toast.success(`${product.name} added to cart!`);
+  };
 
   const updateQuantity = (productId, qty) => {
     setCart((prev) => ({
