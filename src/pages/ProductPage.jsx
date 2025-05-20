@@ -9,28 +9,28 @@ const productMap = {
     image: '/images/vitanixa_slimdetox_product.png',
     price: 24.99,
     ingredients: [
-      'Green Tea (Sencha) - 0.8g (28.6%): Boosts metabolism due to high EGCG content, promoting fat oxidation.',
-      'Oolong Tea - 0.5g (17.9%): Enhances thermogenesis and supports fat metabolism.',
-      'Yerba Mate - 0.4g (14.3%): Offers appetite control and a light energy boost (15mg caffeine).',
-      'Hibiscus Flowers - 0.4g (14.3%): Rich in antioxidants, adds tart flavor, and acts as a gentle diuretic.',
-      'Ginger Root (Dried) - 0.3g (10.7%): Aids digestion, stimulates circulation, and has mild thermogenic effects.',
-      'Cinnamon (Ground) - 0.2g (7.1%): Helps regulate blood sugar levels and adds a warm, sweet note.',
-      'Fennel Seeds - 0.1g (3.6%): Supports digestion, helps reduce bloating, and adds mild sweetness.',
-      'Lemongrass (Dried) - 0.1g (3.6%): Adds a refreshing citrus profile, complements hibiscus, and supports detox.'
+      'Green Tea (Sencha) - 0.8g (28.6%): Boosts metabolism, rich in EGCG.',
+      'Oolong Tea - 0.5g (17.9%): Supports thermogenesis.',
+      'Yerba Mate - 0.4g (14.3%): Appetite control, mild caffeine.',
+      'Hibiscus Flowers - 0.4g (14.3%): Antioxidants + mild diuretic.',
+      'Ginger Root - 0.3g (10.7%): Aids digestion, anti-inflammatory.',
+      'Cinnamon - 0.2g (7.1%): Regulates blood sugar, warming.',
+      'Fennel Seeds - 0.1g (3.6%): Bloating relief, mild sweetness.',
+      'Lemongrass - 0.1g (3.6%): Detox support, citrus finish.'
     ]
   },
   night: {
     name: 'Night Blend',
-    description: 'Promotes restful sleep and supports digestion with chamomile and rooibos.',
+    description: 'Promotes restful sleep and supports digestion with calming botanicals.',
     image: '/images/vitanixa_night_blend_product.png',
     price: 26.99,
     ingredients: [
-      'Chamomile Flowers - 4 oz (25%): Natural sedative, reduces anxiety and supports sleep cycles.',
-      'Rooibos (Red, Organic) - 6 oz (37.5%): Caffeine-free antioxidant, supports metabolism and reduces inflammation.',
-      'Hibiscus Flowers - 3 oz (18.75%): Rich in anthocyanins, helps with water balance and bloating.',
-      'Ginger Root - 2 oz (12.5%): Promotes digestion, warmth, and has calming effects.',
-      'Cinnamon - 0.8 oz (5%): Balances blood sugar and adds a cozy note.',
-      'Lemongrass - 0.4 oz (2.5%): Calming and citrusy, supports relaxation and digestion.'
+      'Chamomile Flowers - Relaxation, natural sedative.',
+      'Rooibos - Antioxidants, caffeine-free metabolism support.',
+      'Hibiscus - Tart, rich in anthocyanins.',
+      'Ginger - Soothes stomach, promotes calm.',
+      'Cinnamon - Balances blood sugar, warming.',
+      'Lemongrass - Mild detox, citrus note.'
     ]
   },
   bundle: {
@@ -40,7 +40,7 @@ const productMap = {
     price: 69.99,
     ingredients: [
       'Includes: SlimDetox Tea + Night Blend',
-      'Save 10% compared to buying individually.'
+      'Save 10% compared to buying separately.'
     ]
   }
 };
@@ -49,6 +49,7 @@ const ProductPage = ({ addToCart }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const product = productMap[id];
+  const [quantity, setQuantity] = useState(1);
   const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({ name: '', comment: '', rating: 5 });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -90,19 +91,32 @@ const ProductPage = ({ addToCart }) => {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <button onClick={() => navigate('/')} className="text-green-700 mb-4 underline">← Back to Shop</button>
+      <button onClick={() => navigate('/')} className="text-green-700 mb-4 underline">
+        ← Back to Shop
+      </button>
+
       <div className="flex flex-col md:flex-row gap-6">
         <img src={product.image} alt={product.name} className="w-full md:w-1/2 rounded shadow" />
         <div className="md:w-1/2">
           <h1 className="text-3xl font-bold">{product.name}</h1>
           <p className="my-4">{product.description}</p>
           <p className="text-xl font-semibold mb-4">${product.price.toFixed(2)}</p>
-          <button
-            className="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800"
-            onClick={() => addToCart(product)}
-          >
-            Add to Cart
-          </button>
+
+          <div className="flex items-center gap-4 mb-4">
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              className="border w-20 px-2 py-1 rounded"
+            />
+            <button
+              className="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800"
+              onClick={() => addToCart(product, quantity)}
+            >
+              Add to Cart
+            </button>
+          </div>
 
           <h4 className="text-lg font-bold mt-8 mb-2">Ingredients:</h4>
           <ul className="list-disc ml-5 text-sm text-gray-700">
