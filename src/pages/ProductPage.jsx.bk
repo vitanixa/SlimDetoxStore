@@ -1,4 +1,3 @@
-// src/pages/ProductPage.jsx
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
@@ -10,28 +9,26 @@ const productMap = {
     image: '/images/vitanixa_slimdetox_product.png',
     price: 24.99,
     ingredients: [
-      'Green Tea (Sencha) - 0.8g (28.6%): Boosts metabolism due to high EGCG content, promoting fat oxidation.',
-      'Oolong Tea - 0.5g (17.9%): Enhances thermogenesis and supports fat metabolism.',
-      'Yerba Mate - 0.4g (14.3%): Offers appetite control and a light energy boost (15mg caffeine).',
-      'Hibiscus Flowers - 0.4g (14.3%): Rich in antioxidants, adds tart flavor, and acts as a gentle diuretic.',
-      'Ginger Root (Dried) - 0.3g (10.7%): Aids digestion, stimulates circulation, and has mild thermogenic effects.',
-      'Cinnamon (Ground) - 0.2g (7.1%): Helps regulate blood sugar levels and adds a warm, sweet note.',
-      'Fennel Seeds - 0.1g (3.6%): Supports digestion, helps reduce bloating, and adds mild sweetness.',
-      'Lemongrass (Dried) - 0.1g (3.6%): Adds a refreshing citrus profile, complements hibiscus, and supports detox.'
+      'Rooibos (Red, Organic)',
+      'Hibiscus Flowers',
+      'Ginger Root',
+      'Cinnamon',
+      'Fennel Seeds',
+      'Lemongrass'
     ]
   },
   night: {
     name: 'Night Blend',
     description: 'Promotes restful sleep and supports digestion with chamomile and rooibos.',
-    image: '/images/vitanixa_night_blend_product.png',
+    image: '/images/vitanixa_night_blend_final_product.png',
     price: 26.99,
     ingredients: [
-      'Chamomile Flowers - 4 oz (25%): Natural sedative, reduces anxiety and supports sleep cycles.',
-      'Rooibos (Red, Organic) - 6 oz (37.5%): Caffeine-free antioxidant, supports metabolism and reduces inflammation.',
-      'Hibiscus Flowers - 3 oz (18.75%): Rich in anthocyanins, helps with water balance and bloating.',
-      'Ginger Root - 2 oz (12.5%): Promotes digestion, warmth, and has calming effects.',
-      'Cinnamon - 0.8 oz (5%): Balances blood sugar and adds a cozy note.',
-      'Lemongrass - 0.4 oz (2.5%): Calming and citrusy, supports relaxation and digestion.'
+      'Chamomile Flowers',
+      'Rooibos',
+      'Hibiscus',
+      'Ginger',
+      'Cinnamon',
+      'Lemongrass'
     ]
   },
   bundle: {
@@ -158,3 +155,4 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
+
