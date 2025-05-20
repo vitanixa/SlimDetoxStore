@@ -4,6 +4,7 @@ import { supabase } from '../supabase';
 
 const productMap = {
   slim: {
+    id: 'slim',
     name: 'SlimDetox Tea',
     description: 'Flush toxins, reduce bloating, and support weight loss naturally.',
     image: '/images/vitanixa_slimdetox_product.png',
@@ -20,6 +21,7 @@ const productMap = {
     ]
   },
   night: {
+    id: 'night',
     name: 'Night Blend',
     description: 'Promotes restful sleep and supports digestion with calming botanicals.',
     image: '/images/vitanixa_night_blend_product.png',
@@ -34,6 +36,7 @@ const productMap = {
     ]
   },
   bundle: {
+    id: 'bundle',
     name: '2-Pack Bundle',
     description: 'Get both teas and save. A full wellness routine — day and night.',
     image: '/images/vitanixa_bundle.png',
@@ -112,7 +115,17 @@ const ProductPage = ({ addToCart }) => {
             />
             <button
               className="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800"
-              onClick={() => addToCart(product, quantity)}
+              onClick={() =>
+                addToCart(
+                  {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                  },
+                  quantity
+                )
+              }
             >
               Add to Cart
             </button>
