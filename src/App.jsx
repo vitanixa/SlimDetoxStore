@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
+import { ShoppingCart } from 'lucide-react';
+import { Toaster, toast } from 'react-hot-toast';
 
 const App = () => {
   const [cart, setCart] = useState(() => {
@@ -15,9 +17,11 @@ const App = () => {
     localStorage.setItem('vitanixa-cart', JSON.stringify(cart));
   }, [cart]);
 
+ 
   const addToCart = (product, qty = 1) => {
     setCart((prev) => {
       const currentQty = prev[product.id]?.quantity || 0;
+      toast.success(`${product.name} added to cart!`);
       return {
         ...prev,
         [product.id]: {
@@ -27,6 +31,7 @@ const App = () => {
       };
     });
   };
+
 
   const updateQuantity = (productId, qty) => {
     setCart((prev) => ({
@@ -50,10 +55,10 @@ const App = () => {
 
   return (
     <Router>
+      <Toaster position="top-center" reverseOrder={false} />
       <header className="bg-green-700 text-white p-6 shadow flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">Vitanixa Herbal Teas</Link>
-        <Link to="/cart" className="relative text-white text-xl">
-          🛒
+        <Link to="/cart" title="View Cart" className="relative">
+          <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />
           {cartCount > 0 && (
             <span className="absolute -top-2 -right-3 bg-white text-green-700 text-xs font-bold rounded-full px-2">
               {cartCount}
