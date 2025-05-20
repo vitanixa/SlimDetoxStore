@@ -18,22 +18,32 @@ const ReviewSection = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.comment || isSubmitting) return;
+  e.preventDefault();
+  if (!formData.name || !formData.comment || isSubmitting) return;
 
-    setIsSubmitting(true);
+  setIsSubmitting(true);
 
-    const { data, error } = await supabase
+  const { error } = await supabase
+    .from('reviews')
+    .insert([{ ...formData, created_at: new Date() }]);
+
+  if (!error) {
+    // ✅ Re-fetch the updated list instead of assuming it worked
+    const { data } = await supabase
       .from('reviews')
-      .insert([{ name: formData.name, comment: formData.comment, rating: formData.rating }]);
+      .select('*')
+      .order('created_at', { ascending: false });
 
-    if (!error) {
-      setReviews([data[0], ...reviews]);
-      setFormData({ name: '', comment: '', rating: 5 });
-    }
+    setReviews(data);
+    setFormData({ name: '', comment: '', rating: 5 });
 
-    setIsSubmitting(false);
-  };
+    // ✅ Optional: show a toast or popup
+    alert('Review submitted successfully!');
+  }
+
+  setIsSubmitting(false);
+};
+
 
   return (
     <section className="mt-16 bg-white p-6 rounded shadow max-w-3xl mx-auto" id="reviews">
