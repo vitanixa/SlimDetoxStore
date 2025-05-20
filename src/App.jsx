@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import ProductImage from './components/ProductImage';
+import ReviewSection from './components/ReviewSection';
 
 const App = () => {
   const [cart, setCart] = useState({});
@@ -142,6 +143,8 @@ const App = () => {
           <div className="mt-4 font-semibold">Total: ${cartTotal}</div>
         </motion.section>
       </main>
+
+      <ReviewSection />
 
       <footer className="text-center text-sm text-green-900 mt-12 p-4">
         &copy; 2025 Vitanixa. All rights reserved.
