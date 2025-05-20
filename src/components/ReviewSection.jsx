@@ -1,35 +1,45 @@
-import React, { useState } from 'react';
-
-const initialReviews = [
-  { name: "Ava T.", rating: 5, comment: "I sleep like a baby now. The Night Blend is heavenly!" },
-  { name: "Jonas R.", rating: 4, comment: "SlimDetox works great, and it tastes amazing too." },
-  { name: "Marcy P.", rating: 5, comment: "I wake up less bloated and more energized. Love this brand." },
-  { name: "Nina M.", rating: 5, comment: "Best tea I’ve tried for calm nights. Highly recommend!" },
-  { name: "Eddie V.", rating: 4, comment: "Good value. Subtle effects but definitely real!" },
-];
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../supabase';
 
 const ReviewSection = () => {
-  const [reviews, setReviews] = useState(initialReviews);
+  const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({ name: '', comment: '', rating: 5 });
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const { data } = await supabase
+        .from('reviews')
+        .select('*')
+        .order('created_at', { ascending: false });
+      setReviews(data);
+    };
+    fetchReviews();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.comment) return;
-    setReviews([...reviews, formData]);
-    setFormData({ name: '', comment: '', rating: 5 });
+    const { name, comment, rating } = formData;
+    if (!name || !comment) return;
+
+    const { data, error } = await supabase
+      .from('reviews')
+      .insert([{ name, comment, rating }]);
+
+    if (!error) {
+      setReviews([data[0], ...reviews]);
+      setFormData({ name: '', comment: '', rating: 5 });
+    }
   };
 
   return (
-    <section id="reviews" className="mt-16 bg-white p-6 rounded shadow max-w-3xl mx-auto">
+    <section className="mt-16 bg-white p-6 rounded shadow max-w-3xl mx-auto" id="reviews">
       <h3 className="text-2xl font-bold mb-4">Customer Reviews</h3>
-      
       {reviews.map((r, i) => (
         <div key={i} className="mb-4 border-b pb-3">
           <p className="font-semibold">{r.name} <span className="text-yellow-500">{"★".repeat(r.rating)}</span></p>
           <p className="text-sm text-gray-700">{r.comment}</p>
         </div>
       ))}
-
       <form onSubmit={handleSubmit} className="mt-6">
         <h4 className="text-lg font-semibold mb-2">Leave a Review</h4>
         <input
