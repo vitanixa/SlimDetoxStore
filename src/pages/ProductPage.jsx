@@ -1,4 +1,3 @@
-// src/pages/ProductPage.jsx
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
@@ -23,7 +22,7 @@ const productMap = {
   night: {
     name: 'Night Blend',
     description: 'Promotes restful sleep and supports digestion with chamomile and rooibos.',
-    image: '/images/vitanixa_night_blend_final_product.png',
+    image: '/images/vitanixa_night_blend_product.png',
     price: 26.99,
     ingredients: [
       'Chamomile Flowers - 4 oz (25%): Natural sedative, reduces anxiety and supports sleep cycles.',
