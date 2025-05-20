@@ -4,7 +4,6 @@ import { supabase } from '../supabase';
 const ReviewSection = () => {
   const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({ name: '', comment: '', rating: 5 });
-  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ move here
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -19,20 +18,17 @@ const ReviewSection = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.comment || isSubmitting) return;
-
-    setIsSubmitting(true);
+    const { name, comment, rating } = formData;
+    if (!name || !comment) return;
 
     const { data, error } = await supabase
       .from('reviews')
-      .insert([{ name: formData.name, comment: formData.comment, rating: formData.rating }]);
+      .insert([{ name, comment, rating }]);
 
     if (!error) {
       setReviews([data[0], ...reviews]);
       setFormData({ name: '', comment: '', rating: 5 });
     }
-
-    setIsSubmitting(false);
   };
 
   return (
@@ -44,6 +40,7 @@ const ReviewSection = () => {
           <p className="text-sm text-gray-700">{r.comment}</p>
         </div>
       ))}
+      const [isSubmitting, setIsSubmitting] = useState(false);
 
       <form onSubmit={handleSubmit} className="mt-6">
         <h4 className="text-lg font-semibold mb-2">Leave a Review</h4>
@@ -70,12 +67,8 @@ const ReviewSection = () => {
             <option key={star} value={star}>{star} Star{star > 1 ? 's' : ''}</option>
           ))}
         </select>
-        <button
-          className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 disabled:opacity-50"
-          type="submit"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit Review'}
+        <button className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800" type="submit">
+          Submit Review
         </button>
       </form>
     </section>
