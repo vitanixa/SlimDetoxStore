@@ -1,5 +1,5 @@
 // src/pages/ProductPage.jsx
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
 
@@ -23,7 +23,7 @@ const productMap = {
   night: {
     name: 'Night Blend',
     description: 'Promotes restful sleep and supports digestion with chamomile and rooibos.',
-    image: '/images/vitanixa_night_blend_product.png',
+    image: '/images/vitanixa_night_blend_final_product.png',
     price: 26.99,
     ingredients: [
       'Chamomile Flowers - 4 oz (25%): Natural sedative, reduces anxiety and supports sleep cycles.',
@@ -46,8 +46,9 @@ const productMap = {
   }
 };
 
-const ProductPage = () => {
+const ProductPage = ({ addToCart }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const product = productMap[id];
   const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({ name: '', comment: '', rating: 5 });
@@ -90,13 +91,17 @@ const ProductPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
+      <button onClick={() => navigate('/')} className="text-green-700 mb-4 underline">← Back to Shop</button>
       <div className="flex flex-col md:flex-row gap-6">
         <img src={product.image} alt={product.name} className="w-full md:w-1/2 rounded shadow" />
         <div className="md:w-1/2">
           <h1 className="text-3xl font-bold">{product.name}</h1>
           <p className="my-4">{product.description}</p>
           <p className="text-xl font-semibold mb-4">${product.price.toFixed(2)}</p>
-          <button className="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800">
+          <button
+            className="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800"
+            onClick={() => addToCart(product)}
+          >
             Add to Cart
           </button>
 
@@ -158,3 +163,4 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
+
