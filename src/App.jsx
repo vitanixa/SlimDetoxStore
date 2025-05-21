@@ -7,6 +7,7 @@ import SuccessPage from './pages/SuccessPage';
 import CancelPage from './pages/CancelPage';
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
+import FitnessPage from './pages/FitnessPage';
 
 const App = () => {
   const [cart, setCart] = useState(() => {
@@ -60,6 +61,7 @@ const App = () => {
       <Toaster position="top-center" />
       <header className="bg-green-700 text-white p-6 shadow flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold">Vitanixa Herbal Teas</Link>
+        <Link to="/fitness" className="hover:underline">Fitness</Link>
         <Link to="/cart" title="View Cart" className="relative">
           <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />
           {cartCount > 0 && (
@@ -75,6 +77,7 @@ const App = () => {
         <Route path="/cart" element={<CartPage cart={cart} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />} />
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/cancel" element={<CancelPage />} />
+        <Route path="/fitness" element={<FitnessPage />} />
       </Routes>
     </Router>
   );
