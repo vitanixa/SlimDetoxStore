@@ -1,77 +1,151 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { supabase } from '../supabase';
 
-const FitnessPage = () => {
-  const [videos, setVideos] = useState([]);
-  const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
+const FitnessUpload = () => {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [passcode, setPasscode] = useState('');
+  const [form, setForm] = useState({
+    title: '',
+    filename: '',
+    description: '',
+    tags: '',
+  });
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchVideos = async () => {
-      console.log("📡 Fetching videos from Supabase...");
-      const { data, error } = await supabase.from('fitness_videos').select('*');
-      if (error) {
-        console.error("❌ Error fetching videos:", error.message);
-      } else {
-        console.log("✅ Fetched videos:", data);
-        setVideos(data);
-      }
-      setLoading(false);
-    };
+  const handleAuth = () => {
+    if (passcode === 'vitanixa123') {
+      setAuthenticated(true);
+    } else {
+      alert('Incorrect passcode');
+    }
+  };
 
-    fetchVideos();
-  }, []);
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const filtered = videos.filter((v) =>
-    v.title?.toLowerCase().includes(search.toLowerCase()) ||
-    v.description?.toLowerCase().includes(search.toLowerCase()) ||
-    (Array.isArray(v.tags) && v.tags.toString().toLowerCase().includes(search.toLowerCase()))
-  );
+    const filename = file.name;
+
+    // Check if file already exists
+    const { data: existing, error: listError } = await supabase
+      .storage
+      .from('fitness-videos')
+      .list('', { search: filename });
+
+    if (listError) {
+      console.error('Error checking existing files:', listError.message);
+      return alert('Storage error. Please try again.');
+    }
+
+    if (existing?.some(f => f.name === filename)) {
+      return alert('⚠️ A video with this filename already exists.');
+    }
+
+    // Upload file to root of bucket
+    const { error } = await supabase.storage
+      .from('fitness-videos')
+      .upload(filename, file, { upsert: false });
+
+    if (error) {
+      console.error('Upload error:', error.message);
+      return alert('❌ Upload failed.');
+    }
+
+    setForm(prev => ({ ...prev, filename }));
+    alert('✅ Video uploaded!');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { title, filename } = form;
+
+    if (!title || !filename) {
+      return alert('⚠️ Title and video file are required.');
+    }
+
+    setLoading(true);
+
+    const { error } = await supabase.from('fitness_videos').insert([{
+      title: form.title,
+      filename: form.filename,
+      description: form.description,
+      tags: form.tags.split(',').map(t => t.trim()),
+    }]);
+
+    setLoading(false);
+
+    if (error) {
+      console.error('Insert error:', error.message);
+      return alert('❌ Failed to save metadata.');
+    }
+
+    alert('✅ Video metadata saved!');
+    setForm({ title: '', filename: '', description: '', tags: '' });
+  };
+
+  if (!authenticated) {
+    return (
+      <div className="p-10 max-w-md mx-auto text-center">
+        <h2 className="text-xl font-semibold mb-4">Enter Upload Passcode</h2>
+        <input
+          type="password"
+          value={passcode}
+          onChange={(e) => setPasscode(e.target.value)}
+          placeholder="Enter passcode"
+          className="border px-4 py-2 rounded w-full mb-4"
+        />
+        <button
+          onClick={handleAuth}
+          className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+        >
+          Submit
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-4">Vitanixa Fitness</h1>
-      <p className="text-gray-600 mb-6">
-        Train your body. Transform your energy. AI-powered fitness videos to guide your journey.
-      </p>
-
-      <input
-        type="text"
-        placeholder="Search workouts..."
-        className="border px-4 py-2 mb-6 w-full rounded"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {loading && <p className="text-gray-500">Loading workouts...</p>}
-
-      {!loading && filtered.length === 0 && (
-        <p className="text-gray-500">No workouts match your search.</p>
-      )}
-
-      <div className="grid md:grid-cols-2 gap-8">
-        {filtered.map((video, i) => (
-          <div key={i} className="bg-white rounded shadow p-4">
-            <h2 className="text-xl font-semibold mb-2">{video.title}</h2>
-            <video controls className="w-full h-64 rounded mb-2">
-              <source
-                src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`}
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-            <p className="text-sm text-gray-600">{video.description}</p>
-            {Array.isArray(video.tags) && video.tags.length > 0 && (
-              <p className="text-xs text-green-700 mt-1">
-                Tags: {video.tags.join(', ')}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+    <div className="max-w-xl mx-auto p-6">
+      <h2 className="text-2xl font-bold mb-4">Upload New Fitness Video</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Title"
+          className="border p-2 w-full rounded"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+        />
+        <input
+          type="file"
+          accept="video/mp4"
+          className="border p-2 w-full rounded"
+          onChange={handleFileUpload}
+        />
+        <textarea
+          placeholder="Description"
+          className="border p-2 w-full rounded"
+          rows="3"
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Tags (comma separated)"
+          className="border p-2 w-full rounded"
+          value={form.tags}
+          onChange={(e) => setForm({ ...form, tags: e.target.value })}
+        />
+        <button
+          type="submit"
+          className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+          disabled={loading}
+        >
+          {loading ? 'Uploading...' : 'Submit'}
+        </button>
+      </form>
     </div>
   );
 };
 
-export default FitnessPage;
+export default FitnessUpload;
 
