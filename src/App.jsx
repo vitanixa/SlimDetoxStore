@@ -15,6 +15,7 @@ import StrengthBuilder from './pages/StrengthBuilder';
 import BeginnerStarter from './pages/BeginnerStarter';
 import CalmCoreYoga from './pages/CalmCoreYoga';
 import FitnessPrograms from './pages/FitnessPrograms';
+import FitnessPlayer from './pages/FitnessPlayer';
 
 const App = () => {
   const [cart, setCart] = useState(() => {
@@ -105,6 +106,7 @@ const App = () => {
           <Route path="/fitness/programs/beginner-starter" element={<BeginnerStarter />} />
           <Route path="/fitness/programs/calm-core-yoga" element={<CalmCoreYoga />} />
           <Route path="/fitness/programs" element={<FitnessPrograms />} />
+          <Route path="/fitness/player" element={<FitnessPlayer />} />
 
         </Routes>
       </main>
