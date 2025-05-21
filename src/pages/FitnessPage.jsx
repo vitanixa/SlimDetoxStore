@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const categories = [
   "Cardio", "Strength", "Core", "Yoga", "Mobility",
@@ -16,7 +17,10 @@ const FitnessPage = () => {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const { data, error } = await supabase.from('fitness_videos').select('*');
+      const { data, error } = await supabase
+        .from('fitness_videos')
+        .select('*')
+        .order('order_index', { ascending: true });
       if (!error) setVideos(data);
     };
     fetchVideos();
@@ -36,23 +40,23 @@ const FitnessPage = () => {
       .eq('id', video.id);
   };
 
-  const handleEdit = async (video) => {
-    const newTitle = prompt('New title:', video.title);
-    const newDesc = prompt('New description:', video.description);
-    const newTags = prompt('Tags (comma-separated):', video.tags?.join(', '));
-    const newCategory = prompt('Category:', video.category || '');
+  const onDragEnd = async (result) => {
+    if (!result.destination) return;
+    const reordered = Array.from(videos);
+    const [moved] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, moved);
 
-    if (newTitle && newDesc && newTags && newCategory) {
-      const { error } = await supabase.from('fitness_videos').update({
-        title: newTitle,
-        description: newDesc,
-        tags: newTags.split(',').map(t => t.trim()),
-        category: newCategory
-      }).eq('id', video.id);
-      if (!error) {
-        alert('✅ Updated!');
-        setVideos((prev) => prev.map(v => v.id === video.id ? { ...v, title: newTitle, description: newDesc, tags: newTags.split(',').map(t => t.trim()), category: newCategory } : v));
-      }
+    // Update local state
+    setVideos(reordered);
+
+    // Update Supabase order_index in batch
+    const updates = reordered.map((v, idx) => ({
+      id: v.id,
+      order_index: idx
+    }));
+
+    for (const update of updates) {
+      await supabase.from('fitness_videos').update({ order_index: update.order_index }).eq('id', update.id);
     }
   };
 
@@ -103,51 +107,56 @@ const FitnessPage = () => {
         ))}
       </select>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {filtered.map(video => (
-          <div key={video.id} className="bg-white rounded shadow p-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">{video.title}</h2>
-              <button onClick={() => toggleBookmark(video.id)} title="Bookmark">
-                {bookmarked.includes(video.id) ? '⭐' : '☆'}
-              </button>
-            </div>
-
-            <video
-              controls
-              onPlay={() => handlePlay(video)}
-              className="w-full h-64 rounded my-3"
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="videos">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="grid md:grid-cols-2 gap-6"
             >
-              <source src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`} type="video/mp4" />
-            </video>
-
-            <p className="text-sm text-gray-600 mb-1">{video.description}</p>
-            {video.category && <p className="text-xs mb-1 text-blue-700">Category: {video.category}</p>}
-            {Array.isArray(video.tags) && video.tags.length > 0 && (
-              <p className="text-xs text-green-700">Tags: {video.tags.join(', ')}</p>
-            )}
-            <p className="text-xs text-gray-400 mt-1">Views: {video.views || 0}</p>
-
-            <div className="flex gap-3 mt-3">
-              <a
-                href={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`}
-                download
-                className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-              >
-                Download
-              </a>
-              {isAdmin && (
-                <button
-                  onClick={() => handleEdit(video)}
-                  className="text-sm bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
+              {filtered.map((video, index) => (
+                <Draggable
+                  key={video.id}
+                  draggableId={video.id.toString()}
+                  index={index}
+                  isDragDisabled={!isAdmin}
                 >
-                  Edit
-                </button>
-              )}
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className="bg-white rounded shadow p-4"
+                    >
+                      <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-semibold">{video.title}</h2>
+                        <button onClick={() => toggleBookmark(video.id)} title="Bookmark">
+                          {bookmarked.includes(video.id) ? '⭐' : '☆'}
+                        </button>
+                      </div>
+                      <video
+                        controls
+                        onPlay={() => handlePlay(video)}
+                        className="w-full h-64 rounded my-3"
+                      >
+                        <source src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`} type="video/mp4" />
+                      </video>
+                      <p className="text-sm text-gray-600 mb-1">{video.description}</p>
+                      {video.category && <p className="text-xs mb-1 text-blue-700">Category: {video.category}</p>}
+                      {Array.isArray(video.tags) && video.tags.length > 0 && (
+                        <p className="text-xs text-green-700">Tags: {video.tags.join(', ')}</p>
+                      )}
+                      <p className="text-xs text-gray-400 mt-1">Views: {video.views || 0}</p>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
             </div>
-          </div>
-        ))}
-      </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };

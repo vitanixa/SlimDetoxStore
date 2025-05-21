@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
 import { supabase } from '../supabase';
 
+const categories = [
+  "Cardio", "Strength", "Core", "Yoga", "Mobility",
+  "HIIT", "Full Body", "Upper Body", "Lower Body",
+  "Stretching", "Pilates", "Dance"
+];
+
 const FitnessUpload = () => {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(() => localStorage.getItem('vitanixa-admin') === 'true');
   const [passcode, setPasscode] = useState('');
   const [form, setForm] = useState({
     title: '',
     filename: '',
     description: '',
     tags: '',
+    category: ''
   });
   const [loading, setLoading] = useState(false);
 
   const handleAuth = () => {
     if (passcode === 'vitanixa123') {
       setAuthenticated(true);
+      localStorage.setItem('vitanixa-admin', 'true');
     } else {
       alert('Incorrect passcode');
     }
@@ -24,45 +32,49 @@ const FitnessUpload = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const { data, error } = await supabase.storage
-      .from('fitness-videos')
-      .upload(file.name, file, { upsert: false });
+    const filename = file.name;
 
-    if (!error) {
-      console.log('Upload succeeded:', file.name);
-      setForm({ ...form, filename: file.name });
-      alert('Video uploaded!');
-    } else {
-      console.error('Upload error:', error.message);
-      alert('Upload failed.');
+    const { data: existing, error: listError } = await supabase
+      .storage
+      .from('fitness-videos')
+      .list('', { search: filename });
+
+    if (listError) return alert('Storage error. Please try again.');
+
+    if (existing?.some(f => f.name === filename)) {
+      return alert('⚠️ A video with this filename already exists.');
     }
+
+    const { error } = await supabase.storage
+      .from('fitness-videos')
+      .upload(filename, file, { upsert: false });
+
+    if (error) return alert('❌ Upload failed.');
+    setForm(prev => ({ ...prev, filename }));
+    alert('✅ Video uploaded!');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title || !form.filename) {
-      alert('Title and filename required');
-      return;
-    }
+    const { title, filename, description, tags, category } = form;
+    if (!title || !filename || !category) return alert('Title, category, and video file are required.');
 
     setLoading(true);
-    console.log('Submitting form:', form);
-
     const { error } = await supabase.from('fitness_videos').insert([{
-      title: form.title,
-      filename: form.filename,
-      description: form.description,
-      tags: form.tags.split(',').map(tag => tag.trim()),
+      title,
+      filename,
+      description,
+      tags: tags.split(',').map(t => t.trim()),
+      category
     }]);
+    setLoading(false);
 
     if (error) {
-      alert('Failed to save metadata');
-      console.error('Metadata insert error:', error.message);
+      alert('❌ Failed to save metadata.');
     } else {
-      alert('Video metadata saved!');
-      setForm({ title: '', filename: '', description: '', tags: '' });
+      alert('✅ Video metadata saved!');
+      setForm({ title: '', filename: '', description: '', tags: '', category: '' });
     }
-    setLoading(false);
   };
 
   if (!authenticated) {
@@ -117,6 +129,16 @@ const FitnessUpload = () => {
           value={form.tags}
           onChange={(e) => setForm({ ...form, tags: e.target.value })}
         />
+        <select
+          className="border p-2 w-full rounded"
+          value={form.category}
+          onChange={(e) => setForm({ ...form, category: e.target.value })}
+        >
+          <option value="">Select Category</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
         <button
           type="submit"
           className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
