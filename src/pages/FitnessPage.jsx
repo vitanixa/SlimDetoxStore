@@ -5,7 +5,9 @@ const FitnessPage = () => {
   const [videos, setVideos] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false); // 🔐 Admin mode
+  const [isAdmin, setIsAdmin] = useState(() => {
+    return localStorage.getItem('vitanixa-admin') === 'true';
+  });
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -20,6 +22,23 @@ const FitnessPage = () => {
 
     fetchVideos();
   }, []);
+
+  const handleAdminLogin = () => {
+    const pass = prompt('Enter admin passcode:');
+    if (pass === 'vitanixa123') {
+      setIsAdmin(true);
+      localStorage.setItem('vitanixa-admin', 'true');
+      alert('✅ Admin mode activated.');
+    } else {
+      alert('❌ Incorrect passcode.');
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdmin(false);
+    localStorage.removeItem('vitanixa-admin');
+    alert('🔒 Admin mode disabled.');
+  };
 
   const filtered = videos.filter((v) =>
     v.title?.toLowerCase().includes(search.toLowerCase()) ||
@@ -42,21 +61,20 @@ const FitnessPage = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* 🔐 Admin Login Prompt */}
-      {!isAdmin && (
+      {/* 🔐 Admin Login/Logout */}
+      {!isAdmin ? (
         <button
-          onClick={() => {
-            const pass = prompt("Enter admin passcode:");
-            if (pass === "vitanixa123") {
-              setIsAdmin(true);
-              alert("✅ Admin mode activated.");
-            } else {
-              alert("❌ Incorrect passcode.");
-            }
-          }}
+          onClick={handleAdminLogin}
           className="mb-4 bg-gray-200 text-sm text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
         >
           Admin Login
+        </button>
+      ) : (
+        <button
+          onClick={handleAdminLogout}
+          className="mb-4 bg-red-100 text-sm text-red-700 px-4 py-2 rounded hover:bg-red-200"
+        >
+          Admin Logout
         </button>
       )}
 
@@ -83,7 +101,7 @@ const FitnessPage = () => {
               </p>
             )}
 
-            {/* 🔐 Delete Button (Admin Only) */}
+            {/* 🔐 Delete (Admin Only) */}
             {isAdmin && (
               <button
                 onClick={async () => {
