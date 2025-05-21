@@ -61,7 +61,7 @@ const App = () => {
       <Toaster position="top-center" />
       <header className="bg-green-700 text-white p-6 shadow flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold">Vitanixa Herbal Teas</Link>
-        <Link to="/" className="text-2xl font-bold">Vitanixa Fitness</Link>
+        <Link to="/fitness" className="text-2xl font-bold">Vitanixa Fitness</Link>
         <Link to="/cart" title="View Cart" className="relative">
           <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />
           {cartCount > 0 && (
