@@ -4,24 +4,27 @@ import { supabase } from '../supabase';
 const FitnessPage = () => {
   const [videos, setVideos] = useState([]);
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchVideos = async () => {
+      console.log("📡 Fetching videos from Supabase...");
       const { data, error } = await supabase.from('fitness_videos').select('*');
       if (error) {
-        console.error('Error fetching videos:', error.message);
+        console.error("❌ Error fetching videos:", error.message);
       } else {
+        console.log("✅ Fetched videos:", data);
         setVideos(data);
-        console.log('Fetched videos:', data);
       }
+      setLoading(false);
     };
 
     fetchVideos();
   }, []);
 
-  const filtered = videos.filter(v =>
-    v.title.toLowerCase().includes(search.toLowerCase()) ||
-    v.description.toLowerCase().includes(search.toLowerCase()) ||
+  const filtered = videos.filter((v) =>
+    v.title?.toLowerCase().includes(search.toLowerCase()) ||
+    v.description?.toLowerCase().includes(search.toLowerCase()) ||
     (v.tags && v.tags.toString().toLowerCase().includes(search.toLowerCase()))
   );
 
@@ -38,15 +41,32 @@ const FitnessPage = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {filtered.length === 0 && <p className="text-gray-500">No workouts match your search.</p>}
+      {loading && <p className="text-gray-500">Loading workouts...</p>}
+
+      {!loading && filtered.length === 0 && (
+        <p className="text-gray-500">No workouts match your search.</p>
+      )}
 
       <div className="grid md:grid-cols-2 gap-8">
+        {/* Fallback test video to confirm display works */}
+        <div className="bg-white rounded shadow p-4">
+          <h2 className="text-xl font-semibold mb-2">Manual Test Video</h2>
+          <video controls className="w-full h-64 rounded mb-2">
+            <source
+              src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/fatburn.mp4"
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+          <p className="text-sm text-gray-600">This is a hardcoded sample video to ensure rendering works.</p>
+        </div>
+
         {filtered.map((video, i) => (
           <div key={i} className="bg-white rounded shadow p-4">
             <h2 className="text-xl font-semibold mb-2">{video.title}</h2>
             <video controls className="w-full h-64 rounded mb-2">
               <source
-                src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/workouts/${video.filename}`}
+                src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`}
                 type="video/mp4"
               />
               Your browser does not support the video tag.
