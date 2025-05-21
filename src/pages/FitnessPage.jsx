@@ -59,13 +59,43 @@ const FitnessPage = () => {
               Your browser does not support the video tag.
             </video>
             <p className="text-sm text-gray-600">{video.description}</p>
+
             {Array.isArray(video.tags) && video.tags.length > 0 && (
               <p className="text-xs text-green-700 mt-1">
                 Tags: {video.tags.join(', ')}
               </p>
             )}
+
+            {/* 👇 Delete Button */}
+            <button
+              onClick={async () => {
+                if (!window.confirm('Are you sure you want to delete this video?')) return;
+
+                // 1. Delete file from Supabase Storage
+                const { error: storageError } = await supabase.storage
+                  .from('fitness-videos')
+                  .remove([video.filename]);
+
+                // 2. Delete row from Supabase Database
+                const { error: dbError } = await supabase
+                  .from('fitness_videos')
+                  .delete()
+                  .eq('id', video.id);
+
+                if (storageError || dbError) {
+                  alert('❌ Failed to delete video.');
+                } else {
+                  alert('✅ Video deleted.');
+                  setVideos(prev => prev.filter(v => v.id !== video.id));
+                }
+              }}
+              className="mt-3 bg-red-600 text-white px-4 py-1 text-sm rounded hover:bg-red-700"
+            >
+              Delete
+            </button>
           </div>
         ))}
+
       </div>
     </div>
   );

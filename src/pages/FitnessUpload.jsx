@@ -26,7 +26,7 @@ const FitnessUpload = () => {
 
     const { data, error } = await supabase.storage
       .from('fitness-videos')
-      .upload(`workouts/${file.name}`, file, { upsert: true });
+      .upload(file.name, file, { upsert: false });
 
     if (!error) {
       console.log('Upload succeeded:', file.name);
