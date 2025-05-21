@@ -10,11 +10,11 @@ import FitnessPage from './pages/FitnessPage';
 import FitnessUpload from './pages/FitnessUpload';
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
-import ProgramsPage from './pages/ProgramsPage';
-import FatBurnBlastProgram from './pages/FatBurnBlastProgram_LIVE';
-import StrengthBuilderProgram from './pages/Strength_builderProgram_LIVE';
-import BeginnerStarterProgram from './pages/Beginner_starterProgram_LIVE';
-import CalmCoreYogaProgram from './pages/Calm_core_yogaProgram_LIVE';
+import FatBurnBlast from './pages/FatBurnBlast';
+import StrengthBuilder from './pages/StrengthBuilder';
+import BeginnerStarter from './pages/BeginnerStarter';
+import CalmCoreYoga from './pages/CalmCoreYoga';
+import FitnessPrograms from './pages/FitnessPrograms';
 
 const App = () => {
   const [cart, setCart] = useState(() => {
@@ -71,13 +71,13 @@ const App = () => {
       <header className="bg-green-700 text-white p-4 shadow flex flex-col sm:flex-row justify-between items-center sticky top-0 z-50">
         <div className="flex items-center gap-6">
           <Link to="/" className="text-xl sm:text-2xl font-bold hover:underline">
-            Vitanixa Herbal Teas
+            Vitanixa-Herbal-Teas
           </Link>
-          <Link to="/fitness" className="text-xl sm:text-1xl font-bold hover:underline">
-            Vitanixa Fitness
+          <Link to="/fitness" className="text-xl sm:text-2xl font-bold hover:underline">
+            Vitanixa-Workout-Videos
           </Link>
-          <Link to="/fitness/programs" className="text-xl sm:text-1xl font-bold hover:underline">
-            Programs
+          <Link to="/fitness/programs" className="text-xl sm:text-2xl font-bold hover:underline">
+            Fitness-Programs
           </Link>
         </div>
         <Link to="/cart" title="View Cart" className="relative mt-2 sm:mt-0">
@@ -100,11 +100,11 @@ const App = () => {
           <Route path="/cancel" element={<CancelPage />} />
           <Route path="/fitness" element={<FitnessPage />} />
           <Route path="/fitness/upload" element={<FitnessUpload />} />
-          <Route path="/fitness/programs" element={<ProgramsPage />} />
-          <Route path="/fitness/programs/fatburn" element={<FatBurnBlastProgram />} />
-          <Route path="/fitness/programs/strength" element={<StrengthBuilderProgram />} />
-          <Route path="/fitness/programs/beginner" element={<BeginnerStarterProgram />} />
-          <Route path="/fitness/programs/calm" element={<CalmCoreYogaProgram />} />
+          <Route path="/fitness/programs/fat-burn-blast" element={<FatBurnBlast />} />
+          <Route path="/fitness/programs/strength-builder" element={<StrengthBuilder />} />
+          <Route path="/fitness/programs/beginner-starter" element={<BeginnerStarter />} />
+          <Route path="/fitness/programs/calm-core-yoga" element={<CalmCoreYoga />} />
+          <Route path="/fitness/programs" element={<FitnessPrograms />} />
 
         </Routes>
       </main>
