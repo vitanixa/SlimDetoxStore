@@ -8,8 +8,11 @@ const FitnessPage = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       const { data, error } = await supabase.from('fitness_videos').select('*');
-      if (!error) {
+      if (error) {
+        console.error('Error fetching videos:', error.message);
+      } else {
         setVideos(data);
+        console.log('Fetched videos:', data);
       }
     };
 
@@ -42,7 +45,10 @@ const FitnessPage = () => {
           <div key={i} className="bg-white rounded shadow p-4">
             <h2 className="text-xl font-semibold mb-2">{video.title}</h2>
             <video controls className="w-full h-64 rounded mb-2">
-              <source src={`/videos/${video.filename}`} type="video/mp4" />
+              <source
+                src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/workouts/${video.filename}`}
+                type="video/mp4"
+              />
               Your browser does not support the video tag.
             </video>
             <p className="text-sm text-gray-600">{video.description}</p>
