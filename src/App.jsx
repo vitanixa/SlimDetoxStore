@@ -10,6 +10,11 @@ import FitnessPage from './pages/FitnessPage';
 import FitnessUpload from './pages/FitnessUpload';
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
+import ProgramsPage from './pages/ProgramsPage';
+import FatBurnBlastProgram from './pages/FatBurnBlastProgram_LIVE';
+import StrengthBuilderProgram from './pages/Strength_builderProgram_LIVE';
+import BeginnerStarterProgram from './pages/Beginner_starterProgram_LIVE';
+import CalmCoreYogaProgram from './pages/Calm_core_yogaProgram_LIVE';
 
 const App = () => {
   const [cart, setCart] = useState(() => {
@@ -68,8 +73,11 @@ const App = () => {
           <Link to="/" className="text-xl sm:text-2xl font-bold hover:underline">
             Vitanixa Herbal Teas
           </Link>
-          <Link to="/fitness" className="text-sm sm:text-base underline hover:text-green-200">
+          <Link to="/fitness" className="text-xl sm:text-1xl font-bold hover:underline">
             Vitanixa Fitness
+          </Link>
+          <Link to="/fitness/programs" className="text-xl sm:text-1xl font-bold hover:underline">
+            Programs
           </Link>
         </div>
         <Link to="/cart" title="View Cart" className="relative mt-2 sm:mt-0">
@@ -92,6 +100,12 @@ const App = () => {
           <Route path="/cancel" element={<CancelPage />} />
           <Route path="/fitness" element={<FitnessPage />} />
           <Route path="/fitness/upload" element={<FitnessUpload />} />
+          <Route path="/fitness/programs" element={<ProgramsPage />} />
+          <Route path="/fitness/programs/fatburn" element={<FatBurnBlastProgram />} />
+          <Route path="/fitness/programs/strength" element={<StrengthBuilderProgram />} />
+          <Route path="/fitness/programs/beginner" element={<BeginnerStarterProgram />} />
+          <Route path="/fitness/programs/calm" element={<CalmCoreYogaProgram />} />
+
         </Routes>
       </main>
     </Router>
