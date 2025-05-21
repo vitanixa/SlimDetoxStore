@@ -25,13 +25,15 @@ const FitnessPage = () => {
   const filtered = videos.filter((v) =>
     v.title?.toLowerCase().includes(search.toLowerCase()) ||
     v.description?.toLowerCase().includes(search.toLowerCase()) ||
-    (v.tags && v.tags.toString().toLowerCase().includes(search.toLowerCase()))
+    (Array.isArray(v.tags) && v.tags.toString().toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
     <div className="max-w-6xl mx-auto p-6">
       <h1 className="text-4xl font-bold mb-4">Vitanixa Fitness</h1>
-      <p className="text-gray-600 mb-6">Train your body. Transform your energy. AI-powered fitness videos to guide your journey.</p>
+      <p className="text-gray-600 mb-6">
+        Train your body. Transform your energy. AI-powered fitness videos to guide your journey.
+      </p>
 
       <input
         type="text"
@@ -48,19 +50,6 @@ const FitnessPage = () => {
       )}
 
       <div className="grid md:grid-cols-2 gap-8">
-        {/* Fallback test video to confirm display works */}
-        <div className="bg-white rounded shadow p-4">
-          <h2 className="text-xl font-semibold mb-2">Manual Test Video</h2>
-          <video controls className="w-full h-64 rounded mb-2">
-            <source
-              src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/fatburn.mp4"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
-          <p className="text-sm text-gray-600">This is a hardcoded sample video to ensure rendering works.</p>
-        </div>
-
         {filtered.map((video, i) => (
           <div key={i} className="bg-white rounded shadow p-4">
             <h2 className="text-xl font-semibold mb-2">{video.title}</h2>
@@ -72,7 +61,7 @@ const FitnessPage = () => {
               Your browser does not support the video tag.
             </video>
             <p className="text-sm text-gray-600">{video.description}</p>
-            {video.tags && (
+            {Array.isArray(video.tags) && video.tags.length > 0 && (
               <p className="text-xs text-green-700 mt-1">
                 Tags: {video.tags.join(', ')}
               </p>
