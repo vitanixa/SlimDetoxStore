@@ -60,12 +60,13 @@ const FitnessPage = () => {
   const startEdit = (video) => {
     setEditingId(video.id);
     setEditForm({
-      title: video.title,
-      description: video.description,
-      tags: video.tags?.join(', ') || '',
-      category: video.category || ''
+      title: video.title ?? '',
+      description: video.description ?? '',
+      tags: Array.isArray(video.tags) ? video.tags.join(', ') : '',
+      category: video.category ?? ''
     });
   };
+
 
   const saveEdit = async (id) => {
     const { title, description, tags, category } = editForm;
