@@ -1,65 +1,76 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Calm_core_yogaProgram = () => (
-  <div className="max-w-4xl mx-auto p-6">
-    <h1 className="text-3xl font-bold mb-4">🧘 Calm & Core Yoga Journey</h1>
-    <p className="text-gray-600 mb-6">Breathe, stretch, and strengthen your center with daily yoga-inspired flows.</p>
-    <div className="grid gap-4">
-      <div className="bg-white p-4 rounded shadow">
-  <h2 className="font-semibold">Day 1: Gentle Core & Breath</h2>
-  <video controls className="w-full rounded mt-2">
-    <source src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/week4_yoga_1.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div><div className="bg-white p-4 rounded shadow">
-  <h2 className="font-semibold">Day 2: Slow Flow Mobility</h2>
-  <video controls className="w-full rounded mt-2">
-    <source src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/week4_mobility_2.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div><div className="bg-white p-4 rounded shadow">
-  <h2 className="font-semibold">Day 3: Balance + Breath</h2>
-  <video controls className="w-full rounded mt-2">
-    <source src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/week4_yoga_3.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div><div className="bg-white p-4 rounded shadow">
-  <h2 className="font-semibold">Day 4: Pilates Control</h2>
-  <video controls className="w-full rounded mt-2">
-    <source src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/week4_pilates_4.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div><div className="bg-white p-4 rounded shadow">
-  <h2 className="font-semibold">Day 5: Stretch + Calm</h2>
-  <video controls className="w-full rounded mt-2">
-    <source src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/week4_stretching_5.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div><div className="bg-white p-4 rounded shadow">
-  <h2 className="font-semibold">Day 6: Core Burn Yoga</h2>
-  <video controls className="w-full rounded mt-2">
-    <source src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/week4_core_6.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div><div className="bg-white p-4 rounded shadow">
-  <h2 className="font-semibold">Day 7: Restorative Stretch</h2>
-  <video controls className="w-full rounded mt-2">
-    <source src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/week4_yoga_7.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div><div className="bg-white p-4 rounded shadow">
-  <h2 className="font-semibold">Day 8: Flow Reset</h2>
-  <video controls className="w-full rounded mt-2">
-    <source src="https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/week4_mobility_8.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div>
-    </div>
-    <div className="mt-6">
-      <Link to="/fitness/programs" className="text-green-700 underline">← Back to Programs</Link>
-    </div>
+const CalmCoreYoga = () => (
+  <div className="max-w-3xl mx-auto p-6">
+    <h1 className="text-3xl font-bold mb-4">Calm & Core Yoga</h1>
+    <p className="text-gray-600 mb-4">Follow this structured daily workout plan. Each link takes you to the workout player.</p>
+    <ol className="list-decimal ml-6">
+      <li className="mb-2">
+        <strong>Day 1:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Yoga Day 1</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 2:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Mobility Day 2</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 3:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Stretching Day 3</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 4:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Pilates Day 4</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 5:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Yoga Day 5</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 6:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Mobility Day 6</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 7:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Stretching Day 7</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 8:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Pilates Day 8</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 9:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Yoga Day 9</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 10:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Mobility Day 10</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 11:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Stretching Day 11</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 12:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Pilates Day 12</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 13:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Yoga Day 13</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 14:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Mobility Day 14</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 15:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Stretching Day 15</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 16:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Pilates Day 16</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 17:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Yoga Day 17</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 18:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Mobility Day 18</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 19:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Stretching Day 19</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 20:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Pilates Day 20</Link>
+      </li>
+      <li className="mb-2">
+        <strong>Day 21:</strong> <Link to={`/fitness?video=${entry.filename}`} className="text-green-700 hover:underline">Calm & Core Yoga - Yoga Day 21</Link>
+      </li>
+    </ol>
   </div>
 );
 
-export default Calm_core_yogaProgram;
+export default CalmCoreYoga;
