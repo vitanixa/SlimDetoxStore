@@ -4,6 +4,13 @@ import { Link } from 'react-router-dom';
 
 const CalmCoreYoga = () => (
   <div className="max-w-6xl mx-auto p-6">
+    <Link
+      to="/fitness/programs"
+      className="text-sm text-green-700 hover:underline mb-4 inline-block"
+    >
+      ← Back to All Programs
+    </Link>
+
     <h1 className="text-3xl font-bold mb-4">Calm & Core Yoga</h1>
     <p className="text-gray-600 mb-6">
       A 21-day journey to calm the mind, improve flexibility, and strengthen the core.

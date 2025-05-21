@@ -4,6 +4,13 @@ import { Link } from 'react-router-dom';
 
 const FatBurnBlast = () => (
   <div className="max-w-6xl mx-auto p-6">
+    <Link
+      to="/fitness/programs"
+      className="text-sm text-green-700 hover:underline mb-4 inline-block"
+    >
+      ← Back to All Programs
+    </Link>
+
     <h1 className="text-3xl font-bold mb-4">Fat Burn Blast</h1>
     <p className="text-gray-600 mb-6">
       A 14-day high-intensity challenge alternating HIIT, cardio, and dance workouts to rev up metabolism and burn fat fast.
