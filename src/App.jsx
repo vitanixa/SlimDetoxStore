@@ -8,6 +8,7 @@ import CancelPage from './pages/CancelPage';
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 import FitnessPage from './pages/FitnessPage';
+import FitnessUpload from './pages/FitnessUpload';
 
 const App = () => {
   const [cart, setCart] = useState(() => {
@@ -78,6 +79,7 @@ const App = () => {
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/cancel" element={<CancelPage />} />
         <Route path="/fitness" element={<FitnessPage />} />
+        <Route path="/fitness/upload" element={<FitnessUpload />} />
       </Routes>
     </Router>
   );
