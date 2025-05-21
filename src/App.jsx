@@ -62,6 +62,8 @@ const App = () => {
   return (
     <Router>
       <Toaster position="top-center" reverseOrder={false} />
+      <Route path="/success" element={<SuccessPage />} />
+      <Route path="/cancel" element={<CancelPage />} />
       <header className="bg-green-700 text-white p-6 shadow flex justify-between items-center">
         <Link to="/cart" title="View Cart" className="relative">
           <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />

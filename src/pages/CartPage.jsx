@@ -13,18 +13,40 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
     window.location.href = paypalUrl;
   };
 
+  const handleStripeCheckout = async () => {
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items })
+    });
+
+    const data = await response.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Stripe checkout failed.');
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
       {items.length === 0 ? (
-        <p>Your cart is empty. <Link to="/" className="text-green-700 underline">Go back to shop</Link></p>
+        <p>
+          Your cart is empty.{' '}
+          <Link to="/" className="text-green-700 underline">Go back to shop</Link>
+        </p>
       ) : (
         <>
           <ul className="divide-y">
             {items.map(item => (
               <li key={item.id} className="py-4 flex items-center gap-6">
-                <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded shadow" />
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-20 h-20 object-cover rounded shadow"
+                />
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold">{item.name}</h3>
                   <p>${item.price.toFixed(2)}</p>
@@ -33,9 +55,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
                       type="number"
                       min="1"
                       value={item.quantity}
-                      onChange={(e) =>
-                        updateQuantity(item.id, Number(e.target.value))
-                      }
+                      onChange={(e) => updateQuantity(item.id, Number(e.target.value))}
                       className="border px-2 py-1 w-20 rounded"
                     />
                     <button
@@ -53,14 +73,24 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
             ))}
           </ul>
 
-          <div className="mt-6 text-right">
+          <div className="mt-8 text-right space-y-4">
             <p className="text-xl font-bold">Total: ${total}</p>
-            <button
-              onClick={handlePayPalCheckout}
-              className="mt-4 bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
-            >
-              Checkout with PayPal
-            </button>
+
+            <div className="flex flex-col md:flex-row gap-4 justify-end">
+              <button
+                onClick={handlePayPalCheckout}
+                className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+              >
+                Checkout with PayPal
+              </button>
+
+              <button
+                onClick={handleStripeCheckout}
+                className="bg-black text-white px-5 py-2 rounded hover:bg-gray-800"
+              >
+                Checkout with Stripe
+              </button>
+            </div>
           </div>
 
           <div className="mt-6">
