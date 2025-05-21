@@ -1,133 +1,150 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
 
+const categories = [
+  "Cardio", "Strength", "Core", "Yoga", "Mobility",
+  "HIIT", "Full Body", "Upper Body", "Lower Body",
+  "Stretching", "Pilates", "Dance"
+];
+
 const FitnessPage = () => {
   const [videos, setVideos] = useState([]);
   const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(() => {
-    return localStorage.getItem('vitanixa-admin') === 'true';
-  });
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('vitanixa-admin') === 'true');
+  const [bookmarked, setBookmarked] = useState(() => JSON.parse(localStorage.getItem('vitanixa-bookmarks') || '[]'));
 
   useEffect(() => {
     const fetchVideos = async () => {
       const { data, error } = await supabase.from('fitness_videos').select('*');
-      if (error) {
-        console.error("Error fetching videos:", error.message);
-      } else {
-        setVideos(data);
-      }
-      setLoading(false);
+      if (!error) setVideos(data);
     };
-
     fetchVideos();
   }, []);
 
-  const handleAdminLogin = () => {
-    const pass = prompt('Enter admin passcode:');
-    if (pass === 'vitanixa123') {
-      setIsAdmin(true);
-      localStorage.setItem('vitanixa-admin', 'true');
-      alert('✅ Admin mode activated.');
-    } else {
-      alert('❌ Incorrect passcode.');
+  const toggleBookmark = (id) => {
+    const updated = bookmarked.includes(id)
+      ? bookmarked.filter(b => b !== id)
+      : [...bookmarked, id];
+    setBookmarked(updated);
+    localStorage.setItem('vitanixa-bookmarks', JSON.stringify(updated));
+  };
+
+  const handlePlay = async (video) => {
+    await supabase.from('fitness_videos')
+      .update({ views: (video.views || 0) + 1 })
+      .eq('id', video.id);
+  };
+
+  const handleEdit = async (video) => {
+    const newTitle = prompt('New title:', video.title);
+    const newDesc = prompt('New description:', video.description);
+    const newTags = prompt('Tags (comma-separated):', video.tags?.join(', '));
+    const newCategory = prompt('Category:', video.category || '');
+
+    if (newTitle && newDesc && newTags && newCategory) {
+      const { error } = await supabase.from('fitness_videos').update({
+        title: newTitle,
+        description: newDesc,
+        tags: newTags.split(',').map(t => t.trim()),
+        category: newCategory
+      }).eq('id', video.id);
+      if (!error) {
+        alert('✅ Updated!');
+        setVideos((prev) => prev.map(v => v.id === video.id ? { ...v, title: newTitle, description: newDesc, tags: newTags.split(',').map(t => t.trim()), category: newCategory } : v));
+      }
     }
   };
 
-  const handleAdminLogout = () => {
-    setIsAdmin(false);
-    localStorage.removeItem('vitanixa-admin');
-    alert('🔒 Admin mode disabled.');
-  };
-
-  const filtered = videos.filter((v) =>
-    v.title?.toLowerCase().includes(search.toLowerCase()) ||
-    v.description?.toLowerCase().includes(search.toLowerCase()) ||
-    (Array.isArray(v.tags) && v.tags.toString().toLowerCase().includes(search.toLowerCase()))
-  );
+  const filtered = videos.filter((v) => {
+    const matchSearch = v.title?.toLowerCase().includes(search.toLowerCase()) ||
+      v.description?.toLowerCase().includes(search.toLowerCase()) ||
+      (Array.isArray(v.tags) && v.tags.join(',').toLowerCase().includes(search.toLowerCase()));
+    const matchCategory = categoryFilter ? v.category === categoryFilter : true;
+    return matchSearch && matchCategory;
+  });
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-4">Vitanixa Fitness</h1>
-      <p className="text-gray-600 mb-6">
-        Train your body. Transform your energy. AI-powered fitness videos to guide your journey.
-      </p>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-4xl font-bold">Vitanixa Fitness</h1>
+        {!isAdmin ? (
+          <button onClick={() => {
+            const pass = prompt('Admin passcode:');
+            if (pass === 'vitanixa123') {
+              localStorage.setItem('vitanixa-admin', 'true');
+              setIsAdmin(true);
+            }
+          }} className="text-sm bg-gray-200 px-4 py-1 rounded">Admin Login</button>
+        ) : (
+          <button onClick={() => {
+            localStorage.removeItem('vitanixa-admin');
+            setIsAdmin(false);
+          }} className="text-sm bg-red-100 px-4 py-1 rounded text-red-700">Logout</button>
+        )}
+      </div>
 
       <input
         type="text"
+        className="border p-2 w-full mb-4 rounded"
         placeholder="Search workouts..."
-        className="border px-4 py-2 mb-6 w-full rounded"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* 🔐 Admin Login/Logout */}
-      {!isAdmin ? (
-        <button
-          onClick={handleAdminLogin}
-          className="mb-4 bg-gray-200 text-sm text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
-        >
-          Admin Login
-        </button>
-      ) : (
-        <button
-          onClick={handleAdminLogout}
-          className="mb-4 bg-red-100 text-sm text-red-700 px-4 py-2 rounded hover:bg-red-200"
-        >
-          Admin Logout
-        </button>
-      )}
+      <select
+        className="border p-2 mb-6 rounded"
+        value={categoryFilter}
+        onChange={(e) => setCategoryFilter(e.target.value)}
+      >
+        <option value="">All Categories</option>
+        {categories.map((cat) => (
+          <option key={cat} value={cat}>{cat}</option>
+        ))}
+      </select>
 
-      {loading && <p className="text-gray-500">Loading workouts...</p>}
-      {!loading && filtered.length === 0 && (
-        <p className="text-gray-500">No workouts match your search.</p>
-      )}
-
-      <div className="grid md:grid-cols-2 gap-8">
-        {filtered.map((video, i) => (
-          <div key={i} className="bg-white rounded shadow p-4">
-            <h2 className="text-xl font-semibold mb-2">{video.title}</h2>
-            <video controls className="w-full h-64 rounded mb-2">
-              <source
-                src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`}
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-            <p className="text-sm text-gray-600">{video.description}</p>
-            {Array.isArray(video.tags) && video.tags.length > 0 && (
-              <p className="text-xs text-green-700 mt-1">
-                Tags: {video.tags.join(', ')}
-              </p>
-            )}
-
-            {/* 🔐 Delete (Admin Only) */}
-            {isAdmin && (
-              <button
-                onClick={async () => {
-                  if (!window.confirm('Are you sure you want to delete this video?')) return;
-
-                  const { error: storageError } = await supabase.storage
-                    .from('fitness-videos')
-                    .remove([video.filename]);
-
-                  const { error: dbError } = await supabase
-                    .from('fitness_videos')
-                    .delete()
-                    .eq('id', video.id);
-
-                  if (storageError || dbError) {
-                    alert('❌ Failed to delete video.');
-                  } else {
-                    alert('✅ Video deleted.');
-                    setVideos(prev => prev.filter(v => v.id !== video.id));
-                  }
-                }}
-                className="mt-3 bg-red-600 text-white px-4 py-1 text-sm rounded hover:bg-red-700"
-              >
-                Delete
+      <div className="grid md:grid-cols-2 gap-6">
+        {filtered.map(video => (
+          <div key={video.id} className="bg-white rounded shadow p-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">{video.title}</h2>
+              <button onClick={() => toggleBookmark(video.id)} title="Bookmark">
+                {bookmarked.includes(video.id) ? '⭐' : '☆'}
               </button>
+            </div>
+
+            <video
+              controls
+              onPlay={() => handlePlay(video)}
+              className="w-full h-64 rounded my-3"
+            >
+              <source src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`} type="video/mp4" />
+            </video>
+
+            <p className="text-sm text-gray-600 mb-1">{video.description}</p>
+            {video.category && <p className="text-xs mb-1 text-blue-700">Category: {video.category}</p>}
+            {Array.isArray(video.tags) && video.tags.length > 0 && (
+              <p className="text-xs text-green-700">Tags: {video.tags.join(', ')}</p>
             )}
+            <p className="text-xs text-gray-400 mt-1">Views: {video.views || 0}</p>
+
+            <div className="flex gap-3 mt-3">
+              <a
+                href={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`}
+                download
+                className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+              >
+                Download
+              </a>
+              {isAdmin && (
+                <button
+                  onClick={() => handleEdit(video)}
+                  className="text-sm bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
+                >
+                  Edit
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -136,4 +153,3 @@ const FitnessPage = () => {
 };
 
 export default FitnessPage;
-
