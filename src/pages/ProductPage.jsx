@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { supabase } from '../supabase';
 
 const productMap = {
   slim: {
@@ -10,40 +9,40 @@ const productMap = {
     image: '/images/vitanixa_slimdetox_product.png',
     price: 24.99,
     ingredients: [
-      'Green Tea (Sencha) - 0.8g (28.6%): Boosts metabolism, rich in EGCG.',
-      'Oolong Tea - 0.5g (17.9%): Supports thermogenesis.',
-      'Yerba Mate - 0.4g (14.3%): Appetite control, mild caffeine.',
-      'Hibiscus Flowers - 0.4g (14.3%): Antioxidants + mild diuretic.',
-      'Ginger Root - 0.3g (10.7%): Aids digestion, anti-inflammatory.',
-      'Cinnamon - 0.2g (7.1%): Regulates blood sugar, warming.',
-      'Fennel Seeds - 0.1g (3.6%): Bloating relief, mild sweetness.',
-      'Lemongrass - 0.1g (3.6%): Detox support, citrus finish.'
+      'Green Tea (Sencha) - Boosts metabolism',
+      'Oolong Tea - Thermogenic support',
+      'Yerba Mate - Curb appetite',
+      'Hibiscus - Antioxidant & diuretic',
+      'Ginger - Aids digestion',
+      'Cinnamon - Balances blood sugar',
+      'Fennel - Bloating relief',
+      'Lemongrass - Detox & citrus flavor'
     ]
   },
   night: {
     id: 'night',
     name: 'Night Blend',
-    description: 'Promotes restful sleep and supports digestion with calming botanicals.',
+    description: 'Promotes restful sleep and digestion with calming botanicals.',
     image: '/images/vitanixa_night_blend_product.png',
     price: 26.99,
     ingredients: [
-      'Chamomile Flowers - Relaxation, natural sedative.',
-      'Rooibos - Antioxidants, caffeine-free metabolism support.',
-      'Hibiscus - Tart, rich in anthocyanins.',
-      'Ginger - Soothes stomach, promotes calm.',
-      'Cinnamon - Balances blood sugar, warming.',
-      'Lemongrass - Mild detox, citrus note.'
+      'Chamomile - Natural relaxant',
+      'Rooibos - Antioxidants',
+      'Hibiscus - Soothing & tart',
+      'Ginger - Calming digestion',
+      'Cinnamon - Balancing',
+      'Lemongrass - Light citrus finish'
     ]
   },
   bundle: {
     id: 'bundle',
     name: '2-Pack Bundle',
-    description: 'Get both teas and save. A full wellness routine — day and night.',
+    description: 'Save and get both blends for your complete wellness journey.',
     image: '/images/vitanixa_bundle.png',
     price: 69.99,
     ingredients: [
-      'Includes: SlimDetox Tea + Night Blend',
-      'Save 10% compared to buying separately.'
+      'Includes SlimDetox + Night Blend',
+      'Total body wellness, day and night.'
     ]
   }
 };
@@ -53,42 +52,6 @@ const ProductPage = ({ addToCart }) => {
   const navigate = useNavigate();
   const product = productMap[id];
   const [quantity, setQuantity] = useState(1);
-  const [reviews, setReviews] = useState([]);
-  const [formData, setFormData] = useState({ name: '', comment: '', rating: 5 });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    const fetchReviews = async () => {
-      const { data } = await supabase
-        .from('reviews')
-        .select('*')
-        .order('created_at', { ascending: false });
-      setReviews(data || []);
-    };
-    fetchReviews();
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.comment || isSubmitting) return;
-    setIsSubmitting(true);
-
-    const { error } = await supabase
-      .from('reviews')
-      .insert([{ ...formData, created_at: new Date() }]);
-
-    if (!error) {
-      const { data } = await supabase
-        .from('reviews')
-        .select('*')
-        .order('created_at', { ascending: false });
-      setReviews(data);
-      setFormData({ name: '', comment: '', rating: 5 });
-      alert('Review submitted!');
-    }
-
-    setIsSubmitting(false);
-  };
 
   if (!product) return <div className="p-8 text-center">Product not found</div>;
 
@@ -115,17 +78,7 @@ const ProductPage = ({ addToCart }) => {
             />
             <button
               className="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800"
-              onClick={() =>
-                addToCart(
-                  {
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image,
-                  },
-                  quantity
-                )
-              }
+              onClick={() => addToCart(product, quantity)}
             >
               Add to Cart
             </button>
@@ -139,54 +92,8 @@ const ProductPage = ({ addToCart }) => {
           </ul>
         </div>
       </div>
-
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
-        {reviews.length === 0 && <p>No reviews yet.</p>}
-        {reviews.map((r, i) => (
-          <div key={i} className="mb-4 border-b pb-3">
-            <p className="font-semibold">{r.name} <span className="text-yellow-500">{"★".repeat(r.rating)}</span></p>
-            <p className="text-sm text-gray-700">{r.comment}</p>
-          </div>
-        ))}
-
-        <form onSubmit={handleSubmit} className="mt-6">
-          <h4 className="text-lg font-semibold mb-2">Leave a Review</h4>
-          <input
-            type="text"
-            placeholder="Your name"
-            className="border p-2 rounded w-full mb-2"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-          <textarea
-            placeholder="Your comment"
-            className="border p-2 rounded w-full mb-2"
-            rows="3"
-            value={formData.comment}
-            onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
-          />
-          <select
-            className="border p-2 rounded w-full mb-2"
-            value={formData.rating}
-            onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) })}
-          >
-            {[5, 4, 3, 2, 1].map(star => (
-              <option key={star} value={star}>{star} Star{star > 1 ? 's' : ''}</option>
-            ))}
-          </select>
-          <button
-            className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 disabled:opacity-50"
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Review'}
-          </button>
-        </form>
-      </div>
     </div>
   );
 };
 
 export default ProductPage;
-

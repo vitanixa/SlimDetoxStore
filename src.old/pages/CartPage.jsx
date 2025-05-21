@@ -105,3 +105,4 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 };
 
 export default CartPage;
+

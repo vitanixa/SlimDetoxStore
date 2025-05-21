@@ -1,10 +1,9 @@
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
-import SuccessPage from './pages/SuccessPage';
-import CancelPage from './pages/CancelPage';
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 
@@ -18,21 +17,26 @@ const App = () => {
     localStorage.setItem('vitanixa-cart', JSON.stringify(cart));
   }, [cart]);
 
+ 
   const addToCart = (product, qty = 1) => {
     setCart((prev) => {
-      const currentQty = prev[product.id]?.quantity || 0;
-      toast.success(`${product.name} added to cart!`);
+      const existing = prev[product.id];
+      const quantity = (existing?.quantity || 0) + qty;
+
+      // 🧠 Use the original product info from the first add (if it exists)
       return {
         ...prev,
         [product.id]: {
           id: product.id,
-          name: prev[product.id]?.name || product.name,
-          image: prev[product.id]?.image || product.image,
-          price: prev[product.id]?.price || product.price,
-          quantity: currentQty + qty,
-        },
+          name: existing?.name || product.name,
+          image: existing?.image || product.image,
+          price: existing?.price || product.price,
+          quantity
+        }
       };
     });
+
+    toast.success(`${product.name} added to cart!`);
   };
 
   const updateQuantity = (productId, qty) => {
@@ -57,9 +61,10 @@ const App = () => {
 
   return (
     <Router>
-      <Toaster position="top-center" />
+      <Toaster position="top-center" reverseOrder={false} />
+      <Route path="/success" element={<SuccessPage />} />
+      <Route path="/cancel" element={<CancelPage />} />
       <header className="bg-green-700 text-white p-6 shadow flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">Vitanixa Herbal Teas</Link>
         <Link to="/cart" title="View Cart" className="relative">
           <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />
           {cartCount > 0 && (
@@ -69,15 +74,15 @@ const App = () => {
           )}
         </Link>
       </header>
+
       <Routes>
         <Route path="/" element={<HomePage cart={cart} addToCart={addToCart} />} />
         <Route path="/product/:id" element={<ProductPage addToCart={addToCart} />} />
         <Route path="/cart" element={<CartPage cart={cart} updateQuantity={updateQuantity} removeFromCart={removeFromCart} />} />
-        <Route path="/success" element={<SuccessPage />} />
-        <Route path="/cancel" element={<CancelPage />} />
       </Routes>
     </Router>
   );
 };
 
 export default App;
+
