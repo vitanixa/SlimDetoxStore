@@ -1,3 +1,4 @@
+// src/pages/FitnessUpload.jsx
 import React, { useState } from 'react';
 import { supabase } from '../supabase';
 
@@ -24,7 +25,7 @@ const FitnessUpload = () => {
       setAuthenticated(true);
       localStorage.setItem('vitanixa-admin', 'true');
     } else {
-      alert('Incorrect passcode');
+      alert('❌ Incorrect passcode');
     }
   };
 
@@ -39,7 +40,7 @@ const FitnessUpload = () => {
       .from('fitness-videos')
       .list('', { search: filename });
 
-    if (listError) return alert('Storage error. Please try again.');
+    if (listError) return alert('⚠️ Storage error. Please try again.');
 
     if (existing?.some(f => f.name === filename)) {
       return alert('⚠️ A video with this filename already exists.');
@@ -60,13 +61,31 @@ const FitnessUpload = () => {
     if (!title || !filename || !category) return alert('Title, category, and video file are required.');
 
     setLoading(true);
+
+    // Determine max order_index
+    const { data: all } = await supabase
+      .from('fitness_videos')
+      .select('order_index')
+      .order('order_index', { ascending: true });
+
+    const order_index = 0; // Add to top
+    if (all && all.length) {
+      for (const row of all) {
+        if (typeof row.order_index === 'number') {
+          await supabase.from('fitness_videos').update({ order_index: row.order_index + 1 }).eq('order_index', row.order_index);
+        }
+      }
+    }
+
     const { error } = await supabase.from('fitness_videos').insert([{
       title,
       filename,
       description,
       tags: tags.split(',').map(t => t.trim()),
-      category
+      category,
+      order_index
     }]);
+
     setLoading(false);
 
     if (error) {
@@ -152,3 +171,4 @@ const FitnessUpload = () => {
 };
 
 export default FitnessUpload;
+
