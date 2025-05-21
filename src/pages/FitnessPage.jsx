@@ -67,7 +67,6 @@ const FitnessPage = () => {
     });
   };
 
-
   const saveEdit = async (id) => {
     const { title, description, tags, category } = editForm;
     const { error } = await supabase.from('fitness_videos').update({
@@ -88,7 +87,6 @@ const FitnessPage = () => {
   const deleteVideo = async (video) => {
     const confirm = window.confirm(`Are you sure you want to delete "${video.title}"?`);
     if (!confirm) return;
-
     await supabase.storage.from('fitness-videos').remove([video.filename]);
     await supabase.from('fitness_videos').delete().eq('id', video.id);
     setVideos(videos.filter(v => v.id !== video.id));
@@ -103,7 +101,7 @@ const FitnessPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold">Vitanixa Fitness</h1>
         {!isAdmin ? (
           <button onClick={() => {
@@ -146,56 +144,54 @@ const FitnessPage = () => {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="grid md:grid-cols-2 gap-6"
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             >
               {filtered.map((video, index) => (
                 <Draggable key={video.id} draggableId={video.id.toString()} index={index} isDragDisabled={!isAdmin}>
                   {(provided) => (
-                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="bg-white rounded shadow p-4">
-                      <div className="flex justify-between items-center">
+                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="bg-white rounded-lg shadow hover:shadow-lg p-4 transition-all duration-200">
+                      <div className="flex justify-between items-center mb-2">
                         {editingId === video.id ? (
                           <input
                             type="text"
+                            className="text-lg font-semibold w-full border-b mb-2"
                             value={editForm.title}
                             onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                            className="text-xl border-b font-semibold w-full mb-2"
-                            placeholder="Video Title"
                           />
                         ) : (
-                          <h2 className="text-xl font-semibold">{video.title}</h2>
+                          <h2 className="text-lg font-semibold">{video.title}</h2>
                         )}
-                        <button onClick={() => toggleBookmark(video.id)}>
+                        <button onClick={() => toggleBookmark(video.id)} title="Bookmark">
                           {bookmarked.includes(video.id) ? '⭐' : '☆'}
                         </button>
                       </div>
 
-                      <video controls onPlay={() => handlePlay(video)} className="w-full h-64 rounded my-3">
+                      <video
+                        controls
+                        onPlay={() => handlePlay(video)}
+                        className="w-full h-48 rounded mb-3"
+                      >
                         <source src={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`} type="video/mp4" />
                       </video>
 
                       {editingId === video.id ? (
                         <>
-                          <label className="text-sm text-gray-700">Description</label>
                           <textarea
-                            rows="3"
-                            className="w-full border p-2 mb-3 rounded"
+                            rows="2"
                             placeholder="Edit description..."
+                            className="w-full border p-2 rounded mb-2"
                             value={editForm.description}
                             onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                           />
-
-                          <label className="text-sm text-gray-700">Tags (comma-separated)</label>
                           <input
                             type="text"
-                            className="w-full border p-2 mb-3 rounded"
-                            placeholder="e.g. fat burn, HIIT"
+                            placeholder="Tags (comma separated)"
+                            className="w-full border p-2 rounded mb-2"
                             value={editForm.tags}
                             onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })}
                           />
-
-                          <label className="text-sm text-gray-700">Category</label>
                           <select
-                            className="w-full border p-2 mb-2 rounded"
+                            className="w-full border p-2 rounded mb-2"
                             value={editForm.category}
                             onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
                           >
@@ -205,21 +201,30 @@ const FitnessPage = () => {
                         </>
                       ) : (
                         <>
-                          <p className="text-sm text-gray-600">{video.description}</p>
-                          {video.category && <p className="text-xs text-blue-700">Category: {video.category}</p>}
-                          {Array.isArray(video.tags) && (
+                          <p className="text-sm text-gray-600 mb-1">{video.description}</p>
+                          {video.category && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full mr-2">{video.category}</span>}
+                          {Array.isArray(video.tags) && video.tags.length > 0 && (
                             <p className="text-xs text-green-700">Tags: {video.tags.join(', ')}</p>
                           )}
                         </>
                       )}
 
-                      <p className="text-xs text-gray-400 mt-1">Views: {video.views || 0}</p>
+                      <div className="flex justify-between items-center mt-3 text-sm text-gray-500">
+                        <span>👁 {video.views || 0} views</span>
+                        <a
+                          href={`https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video.filename}`}
+                          download
+                          className="text-blue-600 hover:underline"
+                        >
+                          ⬇ Download
+                        </a>
+                      </div>
 
                       {isAdmin && (
                         <div className="mt-3 flex gap-3">
                           {editingId === video.id ? (
                             <>
-                              <button onClick={() => saveEdit(video.id)} className="bg-green-700 text-white px-3 py-1 rounded">Save</button>
+                              <button onClick={() => saveEdit(video.id)} className="bg-green-600 text-white px-3 py-1 rounded">Save</button>
                               <button onClick={() => setEditingId(null)} className="bg-gray-500 text-white px-3 py-1 rounded">Cancel</button>
                             </>
                           ) : (
