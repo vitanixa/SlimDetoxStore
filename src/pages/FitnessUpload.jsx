@@ -29,17 +29,24 @@ const FitnessUpload = () => {
       .upload(`workouts/${file.name}`, file, { upsert: true });
 
     if (!error) {
-      alert('Video uploaded!');
+      console.log('Upload succeeded:', file.name);
       setForm({ ...form, filename: file.name });
+      alert('Video uploaded!');
     } else {
+      console.error('Upload error:', error.message);
       alert('Upload failed.');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title || !form.filename) return alert('Title and filename required');
+    if (!form.title || !form.filename) {
+      alert('Title and filename required');
+      return;
+    }
+
     setLoading(true);
+    console.log('Submitting form:', form);
 
     const { error } = await supabase.from('fitness_videos').insert([{
       title: form.title,
@@ -50,6 +57,7 @@ const FitnessUpload = () => {
 
     if (error) {
       alert('Failed to save metadata');
+      console.error('Metadata insert error:', error.message);
     } else {
       alert('Video metadata saved!');
       setForm({ title: '', filename: '', description: '', tags: '' });
@@ -82,6 +90,13 @@ const FitnessUpload = () => {
     <div className="max-w-xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Upload New Fitness Video</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Title"
+          className="border p-2 w-full rounded"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+        />
         <input
           type="file"
           accept="video/mp4"
