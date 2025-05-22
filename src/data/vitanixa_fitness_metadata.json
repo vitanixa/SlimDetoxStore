@@ -1,0 +1,598 @@
+{
+  "Beginner Starter": [
+    {
+      "Day": 1,
+      "Title": "Day 1: Foundation Build",
+      "Description": "Gentle full-body movements to build coordination and strength.",
+      "Filename": "beginnerstarter-day1.mp4",
+      "Duration": 23
+    },
+    {
+      "Day": 2,
+      "Title": "Day 2: Core Stability",
+      "Description": "Engage your center for better balance and mobility.",
+      "Filename": "beginnerstarter-day2.mp4",
+      "Duration": 14
+    },
+    {
+      "Day": 3,
+      "Title": "Day 3: Mobility Reset",
+      "Description": "Loosen joints and reduce stiffness.",
+      "Filename": "beginnerstarter-day3.mp4",
+      "Duration": 24
+    },
+    {
+      "Day": 4,
+      "Title": "Day 4: Endurance Lite",
+      "Description": "Cardio-based flow for energy without burnout.",
+      "Filename": "beginnerstarter-day4.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 5,
+      "Title": "Day 5: Balance Booster",
+      "Description": "Improve your control with single-leg and dynamic balance drills.",
+      "Filename": "beginnerstarter-day5.mp4",
+      "Duration": 20
+    },
+    {
+      "Day": 6,
+      "Title": "Day 6: Recovery Flow",
+      "Description": "Deep stretching and mindful movement.",
+      "Filename": "beginnerstarter-day6.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 7,
+      "Title": "Day 7: Posture Primer",
+      "Description": "Work on spinal alignment and upright posture.",
+      "Filename": "beginnerstarter-day7.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 8,
+      "Title": "Day 8: Foundation Build",
+      "Description": "Gentle full-body movements to build coordination and strength.",
+      "Filename": "beginnerstarter-day8.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 9,
+      "Title": "Day 9: Core Stability",
+      "Description": "Engage your center for better balance and mobility.",
+      "Filename": "beginnerstarter-day9.mp4",
+      "Duration": 15
+    },
+    {
+      "Day": 10,
+      "Title": "Day 10: Mobility Reset",
+      "Description": "Loosen joints and reduce stiffness.",
+      "Filename": "beginnerstarter-day10.mp4",
+      "Duration": 25
+    },
+    {
+      "Day": 11,
+      "Title": "Day 11: Endurance Lite",
+      "Description": "Cardio-based flow for energy without burnout.",
+      "Filename": "beginnerstarter-day11.mp4",
+      "Duration": 22
+    },
+    {
+      "Day": 12,
+      "Title": "Day 12: Balance Booster",
+      "Description": "Improve your control with single-leg and dynamic balance drills.",
+      "Filename": "beginnerstarter-day12.mp4",
+      "Duration": 15
+    },
+    {
+      "Day": 13,
+      "Title": "Day 13: Recovery Flow",
+      "Description": "Deep stretching and mindful movement.",
+      "Filename": "beginnerstarter-day13.mp4",
+      "Duration": 18
+    },
+    {
+      "Day": 14,
+      "Title": "Day 14: Posture Primer",
+      "Description": "Work on spinal alignment and upright posture.",
+      "Filename": "beginnerstarter-day14.mp4",
+      "Duration": 22
+    },
+    {
+      "Day": 15,
+      "Title": "Day 15: Foundation Build",
+      "Description": "Gentle full-body movements to build coordination and strength.",
+      "Filename": "beginnerstarter-day15.mp4",
+      "Duration": 16
+    },
+    {
+      "Day": 16,
+      "Title": "Day 16: Core Stability",
+      "Description": "Engage your center for better balance and mobility.",
+      "Filename": "beginnerstarter-day16.mp4",
+      "Duration": 12
+    },
+    {
+      "Day": 17,
+      "Title": "Day 17: Mobility Reset",
+      "Description": "Loosen joints and reduce stiffness.",
+      "Filename": "beginnerstarter-day17.mp4",
+      "Duration": 21
+    },
+    {
+      "Day": 18,
+      "Title": "Day 18: Endurance Lite",
+      "Description": "Cardio-based flow for energy without burnout.",
+      "Filename": "beginnerstarter-day18.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 19,
+      "Title": "Day 19: Balance Booster",
+      "Description": "Improve your control with single-leg and dynamic balance drills.",
+      "Filename": "beginnerstarter-day19.mp4",
+      "Duration": 15
+    },
+    {
+      "Day": 20,
+      "Title": "Day 20: Recovery Flow",
+      "Description": "Deep stretching and mindful movement.",
+      "Filename": "beginnerstarter-day20.mp4",
+      "Duration": 20
+    },
+    {
+      "Day": 21,
+      "Title": "Day 21: Posture Primer",
+      "Description": "Work on spinal alignment and upright posture.",
+      "Filename": "beginnerstarter-day21.mp4",
+      "Duration": 16
+    },
+    {
+      "Day": 22,
+      "Title": "Day 22: Foundation Build",
+      "Description": "Gentle full-body movements to build coordination and strength.",
+      "Filename": "beginnerstarter-day22.mp4",
+      "Duration": 16
+    },
+    {
+      "Day": 23,
+      "Title": "Day 23: Core Stability",
+      "Description": "Engage your center for better balance and mobility.",
+      "Filename": "beginnerstarter-day23.mp4",
+      "Duration": 15
+    },
+    {
+      "Day": 24,
+      "Title": "Day 24: Mobility Reset",
+      "Description": "Loosen joints and reduce stiffness.",
+      "Filename": "beginnerstarter-day24.mp4",
+      "Duration": 23
+    },
+    {
+      "Day": 25,
+      "Title": "Day 25: Endurance Lite",
+      "Description": "Cardio-based flow for energy without burnout.",
+      "Filename": "beginnerstarter-day25.mp4",
+      "Duration": 16
+    },
+    {
+      "Day": 26,
+      "Title": "Day 26: Balance Booster",
+      "Description": "Improve your control with single-leg and dynamic balance drills.",
+      "Filename": "beginnerstarter-day26.mp4",
+      "Duration": 16
+    },
+    {
+      "Day": 27,
+      "Title": "Day 27: Recovery Flow",
+      "Description": "Deep stretching and mindful movement.",
+      "Filename": "beginnerstarter-day27.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 28,
+      "Title": "Day 28: Posture Primer",
+      "Description": "Work on spinal alignment and upright posture.",
+      "Filename": "beginnerstarter-day28.mp4",
+      "Duration": 21
+    }
+  ],
+  "Calm & Core Yoga": [
+    {
+      "Day": 1,
+      "Title": "Day 1: Mindful Flow",
+      "Description": "Calm sequences to connect breath and movement.",
+      "Filename": "calm&coreyoga-day1.mp4",
+      "Duration": 24
+    },
+    {
+      "Day": 2,
+      "Title": "Day 2: Power Yoga",
+      "Description": "Vinyasa flow with strength-building holds.",
+      "Filename": "calm&coreyoga-day2.mp4",
+      "Duration": 17
+    },
+    {
+      "Day": 3,
+      "Title": "Day 3: Core Stability",
+      "Description": "Engage your center with slow, strong poses.",
+      "Filename": "calm&coreyoga-day3.mp4",
+      "Duration": 13
+    },
+    {
+      "Day": 4,
+      "Title": "Day 4: Hip Opening",
+      "Description": "Release tight hips and improve flexibility.",
+      "Filename": "calm&coreyoga-day4.mp4",
+      "Duration": 20
+    },
+    {
+      "Day": 5,
+      "Title": "Day 5: Spinal Mobility",
+      "Description": "Twists and bends for a healthy spine.",
+      "Filename": "calm&coreyoga-day5.mp4",
+      "Duration": 24
+    },
+    {
+      "Day": 6,
+      "Title": "Day 6: Balance & Focus",
+      "Description": "Poses to sharpen focus and enhance body awareness.",
+      "Filename": "calm&coreyoga-day6.mp4",
+      "Duration": 20
+    },
+    {
+      "Day": 7,
+      "Title": "Day 7: Yin Recovery",
+      "Description": "Deep hold stretches to restore muscles.",
+      "Filename": "calm&coreyoga-day7.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 8,
+      "Title": "Day 8: Mindful Flow",
+      "Description": "Calm sequences to connect breath and movement.",
+      "Filename": "calm&coreyoga-day8.mp4",
+      "Duration": 16
+    },
+    {
+      "Day": 9,
+      "Title": "Day 9: Power Yoga",
+      "Description": "Vinyasa flow with strength-building holds.",
+      "Filename": "calm&coreyoga-day9.mp4",
+      "Duration": 21
+    },
+    {
+      "Day": 10,
+      "Title": "Day 10: Core Stability",
+      "Description": "Engage your center with slow, strong poses.",
+      "Filename": "calm&coreyoga-day10.mp4",
+      "Duration": 15
+    },
+    {
+      "Day": 11,
+      "Title": "Day 11: Hip Opening",
+      "Description": "Release tight hips and improve flexibility.",
+      "Filename": "calm&coreyoga-day11.mp4",
+      "Duration": 25
+    },
+    {
+      "Day": 12,
+      "Title": "Day 12: Spinal Mobility",
+      "Description": "Twists and bends for a healthy spine.",
+      "Filename": "calm&coreyoga-day12.mp4",
+      "Duration": 20
+    },
+    {
+      "Day": 13,
+      "Title": "Day 13: Balance & Focus",
+      "Description": "Poses to sharpen focus and enhance body awareness.",
+      "Filename": "calm&coreyoga-day13.mp4",
+      "Duration": 15
+    },
+    {
+      "Day": 14,
+      "Title": "Day 14: Yin Recovery",
+      "Description": "Deep hold stretches to restore muscles.",
+      "Filename": "calm&coreyoga-day14.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 15,
+      "Title": "Day 15: Mindful Flow",
+      "Description": "Calm sequences to connect breath and movement.",
+      "Filename": "calm&coreyoga-day15.mp4",
+      "Duration": 23
+    },
+    {
+      "Day": 16,
+      "Title": "Day 16: Power Yoga",
+      "Description": "Vinyasa flow with strength-building holds.",
+      "Filename": "calm&coreyoga-day16.mp4",
+      "Duration": 22
+    },
+    {
+      "Day": 17,
+      "Title": "Day 17: Core Stability",
+      "Description": "Engage your center with slow, strong poses.",
+      "Filename": "calm&coreyoga-day17.mp4",
+      "Duration": 11
+    },
+    {
+      "Day": 18,
+      "Title": "Day 18: Hip Opening",
+      "Description": "Release tight hips and improve flexibility.",
+      "Filename": "calm&coreyoga-day18.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 19,
+      "Title": "Day 19: Spinal Mobility",
+      "Description": "Twists and bends for a healthy spine.",
+      "Filename": "calm&coreyoga-day19.mp4",
+      "Duration": 22
+    },
+    {
+      "Day": 20,
+      "Title": "Day 20: Balance & Focus",
+      "Description": "Poses to sharpen focus and enhance body awareness.",
+      "Filename": "calm&coreyoga-day20.mp4",
+      "Duration": 19
+    },
+    {
+      "Day": 21,
+      "Title": "Day 21: Yin Recovery",
+      "Description": "Deep hold stretches to restore muscles.",
+      "Filename": "calm&coreyoga-day21.mp4",
+      "Duration": 18
+    }
+  ],
+  "Fat Burn Blast": [
+    {
+      "Day": 1,
+      "Title": "Day 1: HIIT Ignite",
+      "Description": "Explosive intervals to jumpstart metabolism and improve cardio capacity.",
+      "Filename": "fatburnblast-day1.mp4",
+      "Duration": 16
+    },
+    {
+      "Day": 2,
+      "Title": "Day 2: Endurance Cardio",
+      "Description": "Sustained movement to build stamina and burn calories.",
+      "Filename": "fatburnblast-day2.mp4",
+      "Duration": 22
+    },
+    {
+      "Day": 3,
+      "Title": "Day 3: Dance Burnout",
+      "Description": "Fun, rhythmic combos to torch fat through nonstop movement.",
+      "Filename": "fatburnblast-day3.mp4",
+      "Duration": 25
+    },
+    {
+      "Day": 4,
+      "Title": "Day 4: Power HIIT",
+      "Description": "Short rests, big pushes \u2014 train intensity and recovery.",
+      "Filename": "fatburnblast-day4.mp4",
+      "Duration": 12
+    },
+    {
+      "Day": 5,
+      "Title": "Day 5: Athletic Cardio",
+      "Description": "Agility and tempo drills to enhance coordination and shred fat.",
+      "Filename": "fatburnblast-day5.mp4",
+      "Duration": 28
+    },
+    {
+      "Day": 6,
+      "Title": "Day 6: Latin Dance Cardio",
+      "Description": "Spicy footwork and rhythm \u2014 burn while having fun.",
+      "Filename": "fatburnblast-day6.mp4",
+      "Duration": 27
+    },
+    {
+      "Day": 7,
+      "Title": "Day 7: Core HIIT Circuit",
+      "Description": "Cardio meets abs \u2014 elevate heart rate while tightening the core.",
+      "Filename": "fatburnblast-day7.mp4",
+      "Duration": 18
+    },
+    {
+      "Day": 8,
+      "Title": "Day 8: Step Cardio",
+      "Description": "Low-impact combos that challenge coordination and heart rate.",
+      "Filename": "fatburnblast-day8.mp4",
+      "Duration": 27
+    },
+    {
+      "Day": 9,
+      "Title": "Day 9: Hip-Hop Fat Burn",
+      "Description": "High-energy moves to music that keeps you moving.",
+      "Filename": "fatburnblast-day9.mp4",
+      "Duration": 21
+    },
+    {
+      "Day": 10,
+      "Title": "Day 10: Tabata HIIT",
+      "Description": "Maximum intensity in short bursts \u2014 train like an athlete.",
+      "Filename": "fatburnblast-day10.mp4",
+      "Duration": 13
+    },
+    {
+      "Day": 11,
+      "Title": "Day 11: Kickbox Cardio",
+      "Description": "Punch, jab, and sweat your way to endurance and power.",
+      "Filename": "fatburnblast-day11.mp4",
+      "Duration": 25
+    },
+    {
+      "Day": 12,
+      "Title": "Day 12: Afrobeat Dance Blast",
+      "Description": "Flow with dynamic Afro moves to sculpt and sweat.",
+      "Filename": "fatburnblast-day12.mp4",
+      "Duration": 20
+    },
+    {
+      "Day": 13,
+      "Title": "Day 13: Plyo HIIT",
+      "Description": "Jump-based HIIT to activate legs and burn calories faster.",
+      "Filename": "fatburnblast-day13.mp4",
+      "Duration": 15
+    },
+    {
+      "Day": 14,
+      "Title": "Day 14: Ultimate Burnout",
+      "Description": "Full-body finisher \u2014 celebrate with the hardest burn yet.",
+      "Filename": "fatburnblast-day14.mp4",
+      "Duration": 23
+    }
+  ],
+  "Strength Builder": [
+    {
+      "Day": 1,
+      "Title": "Day 1: Full Body Strength",
+      "Description": "Foundational strength session focusing on all major muscle groups.",
+      "Filename": "strengthbuilder-day1.mp4",
+      "Duration": 26
+    },
+    {
+      "Day": 2,
+      "Title": "Day 2: Upper Body Power",
+      "Description": "Strengthen shoulders, chest, and arms using bodyweight resistance.",
+      "Filename": "strengthbuilder-day2.mp4",
+      "Duration": 26
+    },
+    {
+      "Day": 3,
+      "Title": "Day 3: Lower Body Load",
+      "Description": "Leg-focused training for tone, power, and balance.",
+      "Filename": "strengthbuilder-day3.mp4",
+      "Duration": 21
+    },
+    {
+      "Day": 4,
+      "Title": "Day 4: Core Reinforcement",
+      "Description": "Target abs, obliques, and back to stabilize and sculpt.",
+      "Filename": "strengthbuilder-day4.mp4",
+      "Duration": 10
+    },
+    {
+      "Day": 5,
+      "Title": "Day 5: Endurance Burn",
+      "Description": "Slow controlled sets to improve strength endurance.",
+      "Filename": "strengthbuilder-day5.mp4",
+      "Duration": 23
+    },
+    {
+      "Day": 6,
+      "Title": "Day 6: Push Day",
+      "Description": "Push-focused sets for chest, triceps, and shoulders.",
+      "Filename": "strengthbuilder-day6.mp4",
+      "Duration": 21
+    },
+    {
+      "Day": 7,
+      "Title": "Day 7: Pull Day",
+      "Description": "Pull-focused exercises to hit back and biceps.",
+      "Filename": "strengthbuilder-day7.mp4",
+      "Duration": 20
+    },
+    {
+      "Day": 8,
+      "Title": "Day 8: Full Body Strength",
+      "Description": "Foundational strength session focusing on all major muscle groups.",
+      "Filename": "strengthbuilder-day8.mp4",
+      "Duration": 22
+    },
+    {
+      "Day": 9,
+      "Title": "Day 9: Upper Body Power",
+      "Description": "Strengthen shoulders, chest, and arms using bodyweight resistance.",
+      "Filename": "strengthbuilder-day9.mp4",
+      "Duration": 22
+    },
+    {
+      "Day": 10,
+      "Title": "Day 10: Lower Body Load",
+      "Description": "Leg-focused training for tone, power, and balance.",
+      "Filename": "strengthbuilder-day10.mp4",
+      "Duration": 24
+    },
+    {
+      "Day": 11,
+      "Title": "Day 11: Core Reinforcement",
+      "Description": "Target abs, obliques, and back to stabilize and sculpt.",
+      "Filename": "strengthbuilder-day11.mp4",
+      "Duration": 11
+    },
+    {
+      "Day": 12,
+      "Title": "Day 12: Endurance Burn",
+      "Description": "Slow controlled sets to improve strength endurance.",
+      "Filename": "strengthbuilder-day12.mp4",
+      "Duration": 24
+    },
+    {
+      "Day": 13,
+      "Title": "Day 13: Push Day",
+      "Description": "Push-focused sets for chest, triceps, and shoulders.",
+      "Filename": "strengthbuilder-day13.mp4",
+      "Duration": 15
+    },
+    {
+      "Day": 14,
+      "Title": "Day 14: Pull Day",
+      "Description": "Pull-focused exercises to hit back and biceps.",
+      "Filename": "strengthbuilder-day14.mp4",
+      "Duration": 25
+    },
+    {
+      "Day": 15,
+      "Title": "Day 15: Full Body Strength",
+      "Description": "Foundational strength session focusing on all major muscle groups.",
+      "Filename": "strengthbuilder-day15.mp4",
+      "Duration": 23
+    },
+    {
+      "Day": 16,
+      "Title": "Day 16: Upper Body Power",
+      "Description": "Strengthen shoulders, chest, and arms using bodyweight resistance.",
+      "Filename": "strengthbuilder-day16.mp4",
+      "Duration": 20
+    },
+    {
+      "Day": 17,
+      "Title": "Day 17: Lower Body Load",
+      "Description": "Leg-focused training for tone, power, and balance.",
+      "Filename": "strengthbuilder-day17.mp4",
+      "Duration": 21
+    },
+    {
+      "Day": 18,
+      "Title": "Day 18: Core Reinforcement",
+      "Description": "Target abs, obliques, and back to stabilize and sculpt.",
+      "Filename": "strengthbuilder-day18.mp4",
+      "Duration": 14
+    },
+    {
+      "Day": 19,
+      "Title": "Day 19: Endurance Burn",
+      "Description": "Slow controlled sets to improve strength endurance.",
+      "Filename": "strengthbuilder-day19.mp4",
+      "Duration": 24
+    },
+    {
+      "Day": 20,
+      "Title": "Day 20: Push Day",
+      "Description": "Push-focused sets for chest, triceps, and shoulders.",
+      "Filename": "strengthbuilder-day20.mp4",
+      "Duration": 22
+    },
+    {
+      "Day": 21,
+      "Title": "Day 21: Pull Day",
+      "Description": "Pull-focused exercises to hit back and biceps.",
+      "Filename": "strengthbuilder-day21.mp4",
+      "Duration": 20
+    }
+  ]
+}
