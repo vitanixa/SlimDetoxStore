@@ -40,7 +40,7 @@ const CalmCoreYoga = () => (
 
     <div className="grid sm:grid-cols-2 gap-6">
       {calmYogaDays.map(({ day, title, desc }) => {
-        const filename = `calm&coreyoga-day${day}.mp4`;
+        const filename = `calm-coreyoga-day${day}.mp4`; // ✅ use hyphen instead of &
         return (
           <div key={day} className="bg-white p-4 rounded shadow">
             <h2 className="text-xl font-semibold mb-1">Day {day}: {title}</h2>
