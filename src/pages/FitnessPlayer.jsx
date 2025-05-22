@@ -1,13 +1,11 @@
-// src/pages/FitnessPlayer.jsx
 import React from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
-// Load enriched metadata from JSON
+// Import your grouped metadata object
 import metadata from '../data/vitanixa_fitness_metadata.json';
 
 const FitnessPlayer = () => {
   const { search } = useLocation();
-  const navigate = useNavigate();
   const params = new URLSearchParams(search);
   const video = params.get('video');
   const program = params.get('program');
@@ -15,14 +13,15 @@ const FitnessPlayer = () => {
   const videoUrl = `https://sjzdpvwzolilzdlxagsq.supabase.co/storage/v1/object/public/fitness-videos/${video}`;
   const programLink = program ? `/fitness/programs/${program}` : '/fitness';
 
-  // Match video metadata
-  const videoMeta = metadata.find((entry) => entry.filename.toLowerCase() === video?.toLowerCase());
-
-  // 🔍 Debug logs
-  console.log("🎥 Video param =", video);
-  console.log("📁 Program param =", program);
-  console.log("🧠 Loaded metadata:", metadata.length);
-  console.log("🔎 Matched metadata entry:", videoMeta);
+  // 🔍 Search across all program arrays to find the matching filename
+  let videoMeta = null;
+  for (const group of Object.values(metadata)) {
+    const match = group.find(entry => entry.Filename.toLowerCase() === video?.toLowerCase());
+    if (match) {
+      videoMeta = match;
+      break;
+    }
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -34,7 +33,7 @@ const FitnessPlayer = () => {
       </Link>
 
       <h1 className="text-2xl font-bold mb-2">
-        {videoMeta?.title || 'Workout Player'}
+        {videoMeta?.Title || 'Workout Player'}
       </h1>
 
       <video
@@ -47,14 +46,11 @@ const FitnessPlayer = () => {
 
       {videoMeta ? (
         <>
-          <p className="text-gray-700 text-sm mb-1">{videoMeta.description}</p>
-          <p className="text-xs text-gray-500">Duration: {videoMeta.duration} min</p>
+          <p className="text-gray-700 text-sm mb-1">{videoMeta.Description}</p>
+          <p className="text-xs text-gray-500">Duration: {videoMeta.Duration} min</p>
         </>
       ) : (
-        <div className="bg-yellow-100 text-yellow-900 text-sm p-3 rounded">
-          ⚠️ No metadata found for <code>{video}</code>. <br />
-          Double-check the filename in the JSON and your video URL.
-        </div>
+        <p className="text-sm text-gray-500">No metadata found for this video.</p>
       )}
     </div>
   );
