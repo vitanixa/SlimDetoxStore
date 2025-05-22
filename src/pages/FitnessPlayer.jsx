@@ -51,6 +51,7 @@ const FitnessPlayer = () => {
     </div>
   );
 };
+console.log('✅ Loaded metadata entries:', metadata.length);
 
 export default FitnessPlayer;
 
