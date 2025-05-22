@@ -1,7 +1,8 @@
+// src/pages/FitnessPlayer.jsx
 import React from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 
-// Load enriched metadata from generated JSON
+// Load enriched metadata from JSON
 import metadata from '../data/vitanixa_fitness_metadata.json';
 
 const FitnessPlayer = () => {
@@ -15,7 +16,13 @@ const FitnessPlayer = () => {
   const programLink = program ? `/fitness/programs/${program}` : '/fitness';
 
   // Match video metadata
-  const videoMeta = metadata.find((entry) => entry.filename === video);
+  const videoMeta = metadata.find((entry) => entry.filename.toLowerCase() === video?.toLowerCase());
+
+  // 🔍 Debug logs
+  console.log("🎥 Video param =", video);
+  console.log("📁 Program param =", program);
+  console.log("🧠 Loaded metadata:", metadata.length);
+  console.log("🔎 Matched metadata entry:", videoMeta);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -44,14 +51,14 @@ const FitnessPlayer = () => {
           <p className="text-xs text-gray-500">Duration: {videoMeta.duration} min</p>
         </>
       ) : (
-        <p className="text-sm text-gray-500">
-          No metadata available for this video.
-        </p>
+        <div className="bg-yellow-100 text-yellow-900 text-sm p-3 rounded">
+          ⚠️ No metadata found for <code>{video}</code>. <br />
+          Double-check the filename in the JSON and your video URL.
+        </div>
       )}
     </div>
   );
 };
-console.log('✅ Loaded metadata entries:', metadata.length);
 
 export default FitnessPlayer;
 
