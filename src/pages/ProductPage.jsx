@@ -9,14 +9,13 @@ const productMap = {
     image: '/images/vitanixa_slimdetox_product.png',
     price: 24.99,
     ingredients: [
-      'Green Tea (Sencha) - Boosts metabolism',
-      'Oolong Tea - Thermogenic support',
-      'Yerba Mate - Curb appetite',
+      'Green Tea (Sencha) - Boosts metabolism, antioxidants',
+      'Oolong Tea - Thermogenic support, fat oxidation',
+      'Yerba Mate - Curb appetite, energy boost',
       'Hibiscus - Antioxidant & diuretic',
-      'Ginger - Aids digestion',
-      'Cinnamon - Balances blood sugar',
-      'Fennel - Bloating relief',
-      'Lemongrass - Detox & citrus flavor'
+      'Ginger - Aids digestion & Thermogenesis',
+      'Fennel Seeds- Bloating relief & digestion',
+      'Lemongrass - Detox & digestion, citrus flavor'
     ]
   },
   night: {
@@ -26,12 +25,12 @@ const productMap = {
     image: '/images/vitanixa_night_blend_product.png',
     price: 26.99,
     ingredients: [
-      'Chamomile - Natural relaxant',
-      'Rooibos - Antioxidants',
-      'Hibiscus - Soothing & tart',
-      'Ginger - Calming digestion',
-      'Cinnamon - Balancing',
-      'Lemongrass - Light citrus finish'
+      'Rooibos - Antioxidants & metabolism support',
+      'Hibiscus - Enhances fat metabolism, reduces bloating, tart',
+      'Ginger - Boosts thermogenesis, digestion',
+      'Fennel Seeds - Reduces bloating, digestion',
+      'Peppermint - Soothes digestion, refreshing, curbs appetite',
+      'Nettle Leaf - Diuretic, detoxifies, supports kidney function'
     ]
   },
   bundle: {
