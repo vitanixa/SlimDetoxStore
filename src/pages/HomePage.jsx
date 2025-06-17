@@ -9,21 +9,21 @@ const HomePage = ({ cart, addToCart }) => {
       id: 'slim',
       name: 'SlimDetox Tea',
       description: 'Flush toxins naturally with our herbal detox blend.',
-      price: 24.99,
+      price: 21.99,
       image: '/images/vitanixa_slimdetox_product.png',
     },
     {
       id: 'night',
       name: 'Night Blend',
       description: 'Wind down and sleep deeply with calming botanicals.',
-      price: 26.99,
+      price: 21.99,
       image: '/images/vitanixa_night_blend_product.png',
     },
     {
       id: 'bundle',
       name: '2-Pack Bundle',
       description: 'Get both blends and save on your wellness journey.',
-      price: 69.99,
+      price: 43.50,
       image: '/images/vitanixa_bundle.png',
     }
   ];
