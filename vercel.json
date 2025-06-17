@@ -1,8 +1,10 @@
 {
-  "functions": {
-    "api/create-checkout-session.js": {
-      "runtime": "nodejs18.x"
+  "version": 2,
+  "builds": [],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1.js"
     }
-  }
+  ]
 }
-
