@@ -6,45 +6,34 @@ export default async function handler(req, res) {
   }
 
   try {
-    const items = req.body.items || [];
+    const items = req.body.items;
 
-    const validItems = items
-      .filter(item =>
-        item &&
-        item.price > 0 &&
-        item.quantity > 0 &&
-        item.name &&
-        typeof item.name === 'string'
-      )
-      .map(item => ({
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: item.name,
-            images: [item.image || 'https://www.vitanixa.com/default-image.jpg'],
-          },
-          unit_amount: Math.round(item.price * 100),
-        },
-        quantity: item.quantity,
-      }));
-
-    if (validItems.length === 0) {
-      return res.status(400).json({ error: 'No valid items in cart.' });
-    }
+    // Add this
+    console.log('Received items:', items);
+    console.log('Using Stripe key:', process.env.STRIPE_SECRET_KEY ? '✅ Set' : '❌ Not set');
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
-      line_items: validItems,
+      line_items: items.map(item => ({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: item.name,
+            images: [item.image],
+          },
+          unit_amount: Math.round(item.price * 100),
+        },
+        quantity: item.quantity,
+      })),
       success_url: `${req.headers.origin}/success`,
       cancel_url: `${req.headers.origin}/cancel`,
     });
 
     return res.status(200).json({ url: session.url });
-
   } catch (err) {
-    console.error('Stripe error:', err.message);
+    console.error('Stripe checkout session failed:', err.message);
+    console.error(err); // <-- Full error details
     return res.status(500).json({ error: 'Stripe checkout session failed.' });
   }
 }
-
