@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,21 +8,26 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 
   const handlePayPalCheckout = () => {
     const paypalUrl = `https://www.paypal.com/paypalme/vitanixa/${total}`;
-    window.location.href = paypalUrl;
+    window.open(paypalUrl, '_blank');
   };
 
   const handleStripeCheckout = async () => {
-    const response = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items }),
-    });
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items }),
+      });
 
-    const data = await response.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert('Stripe checkout failed.');
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Unable to proceed to Stripe checkout.');
+      }
+    } catch (err) {
+      console.error('Stripe checkout error:', err);
+      alert('Checkout error. Please try again.');
     }
   };
 
@@ -72,22 +78,31 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
             <div className="flex flex-col md:flex-row gap-4 justify-end">
               <button
                 onClick={handlePayPalCheckout}
-                className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+                className="bg-yellow-500 text-black px-5 py-2 rounded hover:bg-yellow-600 font-semibold"
               >
-                Checkout with PayPal
+                Pay with PayPal
               </button>
 
               <button
                 onClick={handleStripeCheckout}
-                className="bg-black text-white px-5 py-2 rounded hover:bg-gray-800"
+                className="bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700 font-semibold"
               >
-                Checkout with Stripe
+                Pay with Card
               </button>
             </div>
           </div>
 
-          <div className="mt-6 text-sm text-center text-gray-700">
-            Contact: <a href="mailto:support@vitanixa.com" className="underline">support@vitanixa.com</a>
+          <div className="mt-10 text-center text-sm text-gray-600">
+            <p className="font-medium text-green-700">Contact Us</p>
+            <p>
+              <a href="mailto:support@vitanixa.com" className="underline">
+                support@vitanixa.com
+              </a>
+              {' '}|{' '}
+              <a href="https://www.vitanixa.com" target="_blank" rel="noopener noreferrer" className="underline">
+                www.vitanixa.com
+              </a>
+            </p>
           </div>
 
           <div className="mt-4 text-center">
@@ -102,4 +117,3 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 };
 
 export default CartPage;
-
