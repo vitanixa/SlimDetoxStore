@@ -12,24 +12,36 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
   };
 
   const handleStripeCheckout = async () => {
-    try {
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items }),
-      });
+  try {
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    });
 
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Unable to proceed to Stripe checkout.');
-      }
-    } catch (err) {
-      console.error('Stripe checkout error:', err);
-      alert('Checkout error. Please try again.');
+    const text = await response.text(); // Read raw response first
+
+    let data;
+    try {
+      data = JSON.parse(text); // Then try to parse it
+    } catch (jsonError) {
+      console.error('Response was not valid JSON:', text);
+      alert('Server error. Please try again later.');
+      return;
     }
-  };
+
+    if (response.ok && data.url) {
+      window.location.href = data.url;
+    } else {
+      alert(data.error || 'Unable to proceed to Stripe checkout.');
+    }
+
+  } catch (err) {
+    console.error('Stripe checkout error:', err);
+    alert('Checkout error. Please try again.');
+  }
+};
+
 
   return (
     <div className="max-w-4xl mx-auto p-6">
