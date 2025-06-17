@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 
 const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
   const items = Object.values(cart);
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+
+  const total = items
+    .reduce((sum, item) => sum + item.price * item.quantity, 0)
+    .toFixed(2);
 
   const handlePayPalCheckout = () => {
     const paypalUrl = `https://www.paypal.com/paypalme/vitanixa/${total}`;
@@ -14,7 +17,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
     const response = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items }),
+      body: JSON.stringify({ items })
     });
 
     const data = await response.json();
@@ -39,7 +42,11 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
           <ul className="divide-y">
             {items.map(item => (
               <li key={item.id} className="py-4 flex items-center gap-6">
-                <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded shadow" />
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-20 h-20 object-cover rounded shadow"
+                />
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold">{item.name}</h3>
                   <p>${item.price.toFixed(2)}</p>
@@ -86,11 +93,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
             </div>
           </div>
 
-          <div className="mt-6 text-sm text-center text-gray-700">
-            Contact: <a href="mailto:support@vitanixa.com" className="underline">support@vitanixa.com</a>
-          </div>
-
-          <div className="mt-4 text-center">
+          <div className="mt-6">
             <Link to="/" className="text-green-700 underline text-sm">
               ← Continue Shopping
             </Link>
@@ -102,4 +105,3 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 };
 
 export default CartPage;
-
