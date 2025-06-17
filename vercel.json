@@ -1,6 +1,10 @@
 {
   "version": 2,
-  "builds": [],
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "routes": [
     {
       "src": "/api/(.*)",
