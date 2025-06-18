@@ -1,31 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
 const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
+  const [{ isPending }] = usePayPalScriptReducer();
+
   const items = Object.values(cart);
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
-  const total = items
-    .reduce((sum, item) => sum + item.price * item.quantity, 0)
-    .toFixed(2);
-
-  const handlePayPalCheckout = () => {
-    const paypalUrl = `https://www.paypal.com/paypalme/vitanixa/${total}`;
-    window.location.href = paypalUrl;
+  const onCreateOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: total,
+          },
+        },
+      ],
+    });
   };
 
-  const handleStripeCheckout = async () => {
-    const response = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items })
+  const onApprove = (data, actions) => {
+    return actions.order.capture().then((details) => {
+      const name = details.payer.name.given_name;
+      alert(`Transaction completed by ${name}`);
     });
-
-    const data = await response.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert('Stripe checkout failed.');
-    }
   };
 
   return (
@@ -42,11 +41,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
           <ul className="divide-y">
             {items.map(item => (
               <li key={item.id} className="py-4 flex items-center gap-6">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 object-cover rounded shadow"
-                />
+                <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded shadow" />
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold">{item.name}</h3>
                   <p>${item.price.toFixed(2)}</p>
@@ -75,25 +70,40 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 
           <div className="mt-8 text-right space-y-4">
             <p className="text-xl font-bold">Total: ${total}</p>
-
-            <div className="flex flex-col md:flex-row gap-4 justify-end">
-              <button
-                onClick={handlePayPalCheckout}
-                className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
-              >
-                Checkout with PayPal
-              </button>
-
-              <button
-                onClick={handleStripeCheckout}
-                className="bg-black text-white px-5 py-2 rounded hover:bg-gray-800"
-              >
-                Checkout with Stripe
-              </button>
+            <div className="mt-4">
+              <p className="text-sm text-gray-600 mb-2 text-center">
+                💳 Credit or Debit Cards accepted via PayPal – no PayPal account needed.
+              </p>
+              {isPending ? (
+                <p className="text-center">Loading PayPal...</p>
+              ) : (
+                <PayPalButtons
+                  style={{ layout: "vertical" }}
+                  createOrder={onCreateOrder}
+                  onApprove={onApprove}
+                  onError={(err) => {
+                    console.error('PayPal error:', err);
+                    alert('PayPal checkout failed.');
+                  }}
+                />
+              )}
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-10 text-center text-sm text-gray-600">
+            <p className="font-medium text-green-700">Contact Us</p>
+            <p>
+              <a href="mailto:support@vitanixa.com" className="underline">
+                support@vitanixa.com
+              </a>
+              {' '}|{' '}
+              <a href="https://www.vitanixa.com" target="_blank" rel="noopener noreferrer" className="underline">
+                www.vitanixa.com
+              </a>
+            </p>
+          </div>
+
+          <div className="mt-4 text-center">
             <Link to="/" className="text-green-700 underline text-sm">
               ← Continue Shopping
             </Link>
@@ -105,3 +115,4 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 };
 
 export default CartPage;
+

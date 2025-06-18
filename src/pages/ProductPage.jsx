@@ -7,7 +7,7 @@ const productMap = {
     name: 'SlimDetox Tea',
     description: 'Flush toxins, reduce bloating, and support weight loss naturally.',
     image: '/images/vitanixa_slimdetox_product.png',
-    price: 24.99,
+    price: 21.99,
     ingredients: [
       'Green Tea (Sencha) - Boosts metabolism, antioxidants',
       'Oolong Tea - Thermogenic support, fat oxidation',
@@ -23,7 +23,7 @@ const productMap = {
     name: 'Night Blend',
     description: 'Promotes restful sleep and digestion with calming botanicals.',
     image: '/images/vitanixa_night_blend_product.png',
-    price: 26.99,
+    price: 21.99,
     ingredients: [
       'Rooibos - Antioxidants & metabolism support',
       'Hibiscus - Enhances fat metabolism, reduces bloating, tart',
@@ -38,7 +38,7 @@ const productMap = {
     name: '2-Pack Bundle',
     description: 'Save and get both blends for your complete wellness journey.',
     image: '/images/vitanixa_bundle.png',
-    price: 69.99,
+    price: 42.50,
     ingredients: [
       'Includes SlimDetox + Night Blend',
       'Total body wellness, day and night.'
