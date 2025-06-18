@@ -70,8 +70,10 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 
           <div className="mt-8 text-right space-y-4">
             <p className="text-xl font-bold">Total: ${total}</p>
-
             <div className="mt-4">
+              <p className="text-sm text-gray-600 mb-2 text-right">
+                💳 Credit or Debit Cards accepted via PayPal – no PayPal account needed.
+              </p>
               {isPending ? (
                 <p>Loading PayPal...</p>
               ) : (
