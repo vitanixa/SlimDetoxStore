@@ -16,6 +16,7 @@ export default async function handler(req, res) {
 
   try {
     const items = req.body.items;
+    console.log("📦 Stripe received items:", JSON.stringify(items, null, 2));
 
     // Basic validation
     if (!Array.isArray(items) || items.some(i => !i.name || !i.price || !i.quantity)) {
