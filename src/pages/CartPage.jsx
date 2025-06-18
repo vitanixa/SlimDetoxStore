@@ -90,19 +90,6 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
             </div>
           </div>
 
-          <div className="mt-10 text-center text-sm text-gray-600">
-            <p className="font-medium text-green-700">Contact Us</p>
-            <p>
-              <a href="mailto:support@vitanixa.com" className="underline">
-                support@vitanixa.com
-              </a>
-              {' '}|{' '}
-              <a href="https://www.vitanixa.com" target="_blank" rel="noopener noreferrer" className="underline">
-                www.vitanixa.com
-              </a>
-            </p>
-          </div>
-
           <div className="mt-4 text-center">
             <Link to="/" className="text-green-700 underline text-sm">
               ← Continue Shopping
