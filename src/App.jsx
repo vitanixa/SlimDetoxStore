@@ -1,4 +1,5 @@
 // src/App.jsx
+import Footer from './components/Footer'; // ⬅️ Add this at the top
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
@@ -124,6 +125,7 @@ const App = () => {
             <Route path="/fitness/programs" element={<FitnessPrograms />} />
             <Route path="/fitness/player" element={<FitnessPlayer />} />
           </Routes>
+         <Footer />
         </main>
       </Router>
     </PayPalScriptProvider>
