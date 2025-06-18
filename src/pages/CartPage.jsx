@@ -8,36 +8,6 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
   const items = Object.values(cart);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
-  const handleStripeCheckout = async () => {
-    try {
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: Object.values(cart) }),
-      });
-
-      const text = await response.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        console.error('Stripe: Invalid JSON:', text);
-        alert('Stripe error. Try again later.');
-        return;
-      }
-
-      if (response.ok && data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.error || 'Stripe checkout failed.');
-      }
-
-    } catch (err) {
-      console.error('Stripe error:', err);
-      alert('Stripe checkout failed.');
-    }
-  };
-
   const onCreateOrder = (data, actions) => {
     return actions.order.create({
       purchase_units: [
@@ -100,15 +70,6 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 
           <div className="mt-8 text-right space-y-4">
             <p className="text-xl font-bold">Total: ${total}</p>
-
-            <div className="flex flex-col md:flex-row gap-4 justify-end">
-              <button
-                onClick={handleStripeCheckout}
-                className="bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700 font-semibold"
-              >
-                Pay with Card (Stripe)
-              </button>
-            </div>
 
             <div className="mt-4">
               {isPending ? (
