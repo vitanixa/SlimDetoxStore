@@ -11,7 +11,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items: Object.values(cart) }),
       });
 
       const text = await response.text();
