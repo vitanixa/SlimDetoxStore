@@ -1,23 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PayPalButton from '../components/PayPalButton';
 
 const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
   const items = Object.values(cart);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+
+  const handlePayPalCheckout = () => {
+    const paypalUrl = `https://www.paypal.com/paypalme/vitanixa/${total}`;
+    window.open(paypalUrl, '_blank');
+  };
 
   const handleStripeCheckout = async () => {
     try {
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: Object.values(cart) }),
+        body: JSON.stringify({ items: Object.values(cart) }), // ✅ FIXED: send items as array
       });
 
-      const text = await response.text();
+      const text = await response.text(); // Read raw response
       let data;
       try {
-        data = JSON.parse(text);
+        data = JSON.parse(text); // Try parsing JSON
       } catch (jsonError) {
         console.error('Response was not valid JSON:', text);
         alert('Server error. Please try again later.');
@@ -81,9 +85,12 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
             <p className="text-xl font-bold">Total: ${total}</p>
 
             <div className="flex flex-col md:flex-row gap-4 justify-end">
-              <div className="w-full md:w-auto">
-                <PayPalButton total={total} />
-              </div>
+              <button
+                onClick={handlePayPalCheckout}
+                className="bg-yellow-500 text-black px-5 py-2 rounded hover:bg-yellow-600 font-semibold"
+              >
+                Pay with PayPal
+              </button>
 
               <button
                 onClick={handleStripeCheckout}

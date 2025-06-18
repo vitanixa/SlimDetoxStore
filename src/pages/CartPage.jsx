@@ -1,43 +1,60 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
 const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
+  const [{ isPending }] = usePayPalScriptReducer();
+
   const items = Object.values(cart);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
-
-  const handlePayPalCheckout = () => {
-    const paypalUrl = `https://www.paypal.com/paypalme/vitanixa/${total}`;
-    window.open(paypalUrl, '_blank');
-  };
 
   const handleStripeCheckout = async () => {
     try {
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: Object.values(cart) }), // ✅ FIXED: send items as array
+        body: JSON.stringify({ items: Object.values(cart) }),
       });
 
-      const text = await response.text(); // Read raw response
+      const text = await response.text();
       let data;
       try {
-        data = JSON.parse(text); // Try parsing JSON
-      } catch (jsonError) {
-        console.error('Response was not valid JSON:', text);
-        alert('Server error. Please try again later.');
+        data = JSON.parse(text);
+      } catch {
+        console.error('Stripe: Invalid JSON:', text);
+        alert('Stripe error. Try again later.');
         return;
       }
 
       if (response.ok && data.url) {
         window.location.href = data.url;
       } else {
-        alert(data.error || 'Unable to proceed to Stripe checkout.');
+        alert(data.error || 'Stripe checkout failed.');
       }
 
     } catch (err) {
-      console.error('Stripe checkout error:', err);
-      alert('Checkout error. Please try again.');
+      console.error('Stripe error:', err);
+      alert('Stripe checkout failed.');
     }
+  };
+
+  const onCreateOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: total,
+          },
+        },
+      ],
+    });
+  };
+
+  const onApprove = (data, actions) => {
+    return actions.order.capture().then((details) => {
+      const name = details.payer.name.given_name;
+      alert(`Transaction completed by ${name}`);
+    });
   };
 
   return (
@@ -86,18 +103,27 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 
             <div className="flex flex-col md:flex-row gap-4 justify-end">
               <button
-                onClick={handlePayPalCheckout}
-                className="bg-yellow-500 text-black px-5 py-2 rounded hover:bg-yellow-600 font-semibold"
-              >
-                Pay with PayPal
-              </button>
-
-              <button
                 onClick={handleStripeCheckout}
                 className="bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700 font-semibold"
               >
-                Pay with Card
+                Pay with Card (Stripe)
               </button>
+            </div>
+
+            <div className="mt-4">
+              {isPending ? (
+                <p>Loading PayPal...</p>
+              ) : (
+                <PayPalButtons
+                  style={{ layout: "vertical" }}
+                  createOrder={onCreateOrder}
+                  onApprove={onApprove}
+                  onError={(err) => {
+                    console.error('PayPal error:', err);
+                    alert('PayPal checkout failed.');
+                  }}
+                />
+              )}
             </div>
           </div>
 
