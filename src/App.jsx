@@ -85,12 +85,14 @@ const App = () => {
             <Link to="/" className="text-xl sm:text-2xl font-bold hover:underline">
               Vitanixa-Herbal-Teas
             </Link>
+            /*
             <Link to="/fitness" className="text-xl sm:text-2xl font-bold hover:underline">
               Vitanixa-Workout-Videos
             </Link>
             <Link to="/fitness/programs" className="text-xl sm:text-2xl font-bold hover:underline">
               Fitness-Programs
             </Link>
+           */
           </div>
           <Link to="/cart" title="View Cart" className="relative mt-2 sm:mt-0">
             <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />
