@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
+import Reviews from "./pages/Reviews";
 
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
@@ -107,7 +108,7 @@ const App = () => {
         {/* ✅ Route Pages */}
         <main className="min-h-screen bg-beige text-green-900 font-sans">
           <Routes>
-            <Route path="/" element={<HomePage cart={cart} addToCart={addToCart} />} />
+            <Route path="/" element={<><HomePage cart={cart} addToCart={addToCart} /><Reviews /></>} />
             <Route path="/product/:id" element={<ProductPage addToCart={addToCart} />} />
             <Route path="/cart" element={
               <CartPage
