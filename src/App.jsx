@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
-import Reviews from "./components/Reviews";
+import Reviews from "./pages/Reviews";
 
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
