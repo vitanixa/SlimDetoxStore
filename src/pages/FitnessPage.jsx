@@ -1,6 +1,6 @@
 // src/pages/FitnessPage.jsx
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabase';
+import { supabase } from '../supabaseClient';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const categories = [
