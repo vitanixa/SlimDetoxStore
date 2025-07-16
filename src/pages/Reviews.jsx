@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 
-export default function Reviews() {
+export default function Reviews({ limit = 3 }) {
   const [reviews, setReviews] = useState([]);
   const [form, setForm] = useState({ name: "", comment: "", rating: 5 });
   const [loading, setLoading] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchReviews();
@@ -28,9 +29,12 @@ export default function Reviews() {
     setLoading(false);
   }
 
+  const displayedReviews = showAll ? reviews : reviews.slice(0, limit);
+
   return (
     <div className="max-w-2xl mx-auto my-8 p-4 border rounded shadow">
-      <h2 className="text-xl font-bold mb-4">Customer Reviews</h2>
+      <h2 className="text-xl font-bold mb-4 text-center">Customer Reviews</h2>
+
       <form onSubmit={handleSubmit} className="space-y-3 mb-6">
         <input
           type="text"
@@ -66,7 +70,7 @@ export default function Reviews() {
       </form>
 
       <div className="space-y-4">
-        {reviews.map((rev) => (
+        {displayedReviews.map((rev) => (
           <div key={rev.id} className="border-t pt-2">
             <p className="font-semibold">{rev.name} ({rev.rating}⭐)</p>
             <p>{rev.comment}</p>
@@ -74,6 +78,17 @@ export default function Reviews() {
           </div>
         ))}
       </div>
+
+      {reviews.length > limit && (
+        <div className="text-center mt-4">
+          <button
+            className="text-green-700 hover:underline"
+            onClick={() => setShowAll((prev) => !prev)}
+          >
+            {showAll ? "Show Less" : "View All Reviews"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
