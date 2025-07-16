@@ -23,7 +23,7 @@ const HomePage = ({ cart, addToCart }) => {
       id: 'bundle',
       name: '2-Pack Bundle',
       description: 'Get both blends and save on your wellness journey.',
-      price: 43.50,
+      price: 42.50,
       image: '/images/vitanixa_bundle.png',
     }
   ];
