@@ -43,7 +43,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
           amount,
           currency,
           paypal_order_id: orderId,
-          items: cartItems,
+          items,
           shipping,
           created_at: new Date().toISOString(),
         },
@@ -66,7 +66,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
           payer_email: email,
           amount,
           currency,
-          items: cartItems,
+          items,
           shipping,
         }),
       });
