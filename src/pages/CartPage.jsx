@@ -43,6 +43,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
           amount,
           currency,
           items,
+          created_at: new Date().toISOString(),
         },
       ]);
 
@@ -52,11 +53,18 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
       } else {
         toast.success(`Payment completed by ${name}`);
       }
+      // ✅ Clear cart (both local + state)
+      localStorage.removeItem("cart");
+      if (typeof updateQuantity === "function") {
+        Object.keys(cart).forEach((id) => updateQuantity(id, 0));
+      }
 
-      // ✅ Redirect to success page
-      window.location.href = "/success";
+      // ✅ Redirect after short delay
+      setTimeout(() => {
+        window.location.href = "/success";
+      }, 1500);
     } catch (err) {
-      console.error("PayPal approval error:", err);
+      console.error("❌ PayPal approval error:", err);
       toast.error("Something went wrong during checkout.");
     }
   };
