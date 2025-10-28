@@ -33,9 +33,12 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
       const amount = details.purchase_units[0].amount.value;
       const currency = details.purchase_units[0].amount.currency_code;
       const orderId = details.id;
-      const shipping = details.purchase_units[0].shipping || null; // 🆕 optional shipping info
+      const shipping = details.purchase_units[0].shipping || null;
 
-      // ✅ Insert order into Supabase
+      // ✅ Fix: use cartItems from above
+      const items = cartItems;
+
+      console.log("🛒 Attempting Supabase insert...");
       const { error } = await supabase.from("orders").insert([
         {
           payer_name: name,
@@ -43,7 +46,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
           amount,
           currency,
           paypal_order_id: orderId,
-          items,
+          items, // ✅ now defined
           shipping,
           created_at: new Date().toISOString(),
         },
@@ -55,8 +58,8 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
         return;
       }
 
-      // ✅ Send confirmation emails
-      await fetch("/api/sendEmail", {
+      console.log("📧 Sending email via /api/sendEmail...");
+      const res = await fetch("/api/sendEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -71,15 +74,20 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
         }),
       });
 
+      if (!res.ok) {
+        console.error("❌ Email API error:", await res.text());
+        toast.error("Email send failed.");
+        return;
+      }
+
       toast.success(`Payment completed by ${name}`);
 
-      // ✅ Clear cart after successful order
+      // ✅ Clear cart
       localStorage.removeItem("vitanixa-cart");
       if (typeof updateQuantity === "function") {
         Object.keys(cart).forEach((id) => updateQuantity(id, 0));
       }
 
-      // ✅ Redirect after short delay
       setTimeout(() => {
         window.location.href = "/success";
       }, 1500);
