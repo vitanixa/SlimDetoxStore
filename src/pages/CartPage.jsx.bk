@@ -1,17 +1,15 @@
 import { sendOrderEmail } from "../api/sendEmail";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../supabaseClient"; // ✅ import at top
 import { toast } from "react-hot-toast";
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
 const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
   const [{ isPending }] = usePayPalScriptReducer();
 
-  const cartItems = Object.values(cart);
-  const total = cartItems
-    .reduce((sum, item) => sum + item.price * item.quantity, 0)
-    .toFixed(2);
+  const items = Object.values(cart);
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
   const onCreateOrder = (data, actions) => {
     return actions.order.create({
@@ -24,19 +22,21 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
       ],
     });
   };
-
+  
   const onApprove = async (data, actions) => {
     try {
       const details = await actions.order.capture();
 
-      const name = `${details.payer.name.given_name} ${details.payer.name.surname}`;
+      const name = details.payer.name.given_name + " " + details.payer.name.surname;
       const email = details.payer.email_address;
       const amount = details.purchase_units[0].amount.value;
       const currency = details.purchase_units[0].amount.currency_code;
       const orderId = details.id;
-      const shipping = details.purchase_units[0].shipping || null; // 🆕 optional shipping info
 
-      // ✅ Insert order into Supabase
+      // 🛒 Get cart items for storage
+      const items = Object.values(cart);
+
+      // ✅ Store in Supabase
       const { error } = await supabase.from("orders").insert([
         {
           payer_name: name,
@@ -45,18 +45,22 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
           currency,
           paypal_order_id: orderId,
           items: cartItems,
-          shipping,
           created_at: new Date().toISOString(),
         },
       ]);
 
       if (error) {
-        console.error("❌ Supabase insert error:", error);
-        toast.error("Failed to save order.");
-        return;
+        console.error("Supabase insert error:", error);
+        toast.error("Order saved failed");
+      } else {
+        toast.success(`Payment completed by ${name}`);
       }
+      if (error) {
+        console.error("Supabase insert error:", error);
+        toast.error("Order saved failed");
+      } else {
+        toast.success(`Payment completed by ${name}`);
 
-      // ✅ Send confirmation emails
       await sendOrderEmail({
         id: orderId,
         paypal_order_id: orderId,
@@ -64,14 +68,12 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
         payer_email: email,
         amount,
         currency,
-        items: cartItems,
-        shipping,
+        items: cartItems, // ✅ Add comma
+        shipping, // ✅ Now valid
       });
 
-      toast.success(`Payment completed by ${name}`);
-
-      // ✅ Clear cart after successful order
-      localStorage.removeItem("vitanixa-cart");
+      // ✅ Clear cart (both local + state)
+      localStorage.removeItem("cart");
       if (typeof updateQuantity === "function") {
         Object.keys(cart).forEach((id) => updateQuantity(id, 0));
       }
@@ -90,23 +92,17 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
-      {cartItems.length === 0 ? (
+      {items.length === 0 ? (
         <p>
-          Your cart is empty.{" "}
-          <Link to="/" className="text-green-700 underline">
-            Go back to shop
-          </Link>
+          Your cart is empty.{' '}
+          <Link to="/" className="text-green-700 underline">Go back to shop</Link>
         </p>
       ) : (
         <>
           <ul className="divide-y">
-            {cartItems.map((item) => (
+            {items.map(item => (
               <li key={item.id} className="py-4 flex items-center gap-6">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 object-cover rounded shadow"
-                />
+                <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded shadow" />
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold">{item.name}</h3>
                   <p>${item.price.toFixed(2)}</p>
@@ -115,9 +111,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
                       type="number"
                       min="1"
                       value={item.quantity}
-                      onChange={(e) =>
-                        updateQuantity(item.id, Number(e.target.value))
-                      }
+                      onChange={(e) => updateQuantity(item.id, Number(e.target.value))}
                       className="border px-2 py-1 w-20 rounded"
                     />
                     <button
@@ -139,8 +133,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
             <p className="text-xl font-bold">Total: ${total}</p>
             <div className="mt-4">
               <p className="text-sm text-gray-600 mb-2 text-center">
-                💳 Credit or Debit Cards accepted via PayPal – no PayPal account
-                needed.
+                💳 Credit or Debit Cards accepted via PayPal – no PayPal account needed.
               </p>
               {isPending ? (
                 <p className="text-center">Loading PayPal...</p>
@@ -150,8 +143,8 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
                   createOrder={onCreateOrder}
                   onApprove={onApprove}
                   onError={(err) => {
-                    console.error("PayPal error:", err);
-                    alert("PayPal checkout failed.");
+                    console.error('PayPal error:', err);
+                    alert('PayPal checkout failed.');
                   }}
                 />
               )}
