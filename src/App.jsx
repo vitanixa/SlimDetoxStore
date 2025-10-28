@@ -21,7 +21,8 @@ import FitnessPrograms from './pages/FitnessPrograms';
 import FitnessPlayer from './pages/FitnessPlayer';
 
 const initialPayPalOptions = {
-  "client-id": "AQlkZ_rVKY9won9AH0dJCXRCWLSQoINm52BbALJwyiTxSoWgo2VPNnGAY6T3EqCEEuTP1-JCeyOebzHz", // ⬅️ replace with your real live client ID
+  "client-id": "AQCfVig3gY0EDOo8RFTsO3sNepSM5vQu2GHIit72NF3Yz8a5VQw0ckW4X3D9hwB1qJg1QmijtT1zlpDC", // ⬅️ replace with your real live client ID
+ // "client-id": "AQlkZ_rVKY9won9AH0dJCXRCWLSQoINm52BbALJwyiTxSoWgo2VPNnGAY6T3EqCEEuTP1-JCeyOebzHz", // ⬅️ replace with your real live client ID
   currency: "USD",
   intent: "capture",
   "enable-funding": "card"
