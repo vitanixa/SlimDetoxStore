@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
@@ -19,12 +20,16 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
       ],
     });
   };
+  
+  const onApprove = async (data, actions) => {
+    const details = await actions.order.capture();
+    const name = details.payer.name.given_name;
 
-  const onApprove = (data, actions) => {
-    return actions.order.capture().then((details) => {
-      const name = details.payer.name.given_name;
-      alert(`Transaction completed by ${name}`);
-    });
+    // ✅ Modern toast notification
+    toast.success(`Payment completed by ${name}`);
+
+    // ✅ Redirect to success page
+    window.location.href = "/success";
   };
 
   return (

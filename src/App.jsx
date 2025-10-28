@@ -6,7 +6,6 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 import Reviews from "./pages/Reviews";
-
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
@@ -117,7 +116,7 @@ const App = () => {
                 removeFromCart={removeFromCart}
               />
             } />
-            <Route path="/success" element={<SuccessPage />} />
+            <Route path="/success" element={<SuccessPage setCart={setCart} />} />
             <Route path="/cancel" element={<CancelPage />} />
             <Route path="/fitness" element={<FitnessPage />} />
             <Route path="/fitness/upload" element={<FitnessUpload />} />
