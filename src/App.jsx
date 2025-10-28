@@ -40,8 +40,7 @@ const App = () => {
   const addToCart = (product, qty = 1) => {
     setCart((prev) => {
       const currentQty = prev[product.id]?.quantity || 0;
-      toast.success(`${product.name} added to cart!`);
-      return {
+      const updatedCart = {
         ...prev,
         [product.id]: {
           id: product.id,
@@ -51,9 +50,85 @@ const App = () => {
           quantity: currentQty + qty,
         },
       };
+
+      // 🧮 Calculate subtotal + count
+      const subtotal = Object.values(updatedCart).reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const totalItems = Object.values(updatedCart).reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+
+      // 🛒 Animate the cart icon briefly
+      const cartIcon = document.querySelector(".cart-icon-bounce");
+      if (cartIcon) {
+        cartIcon.classList.add("cart-bounce");
+        setTimeout(() => cartIcon.classList.remove("cart-bounce"), 400);
+      }
+
+      // 🧁 Amazon-style toast panel
+      toast.custom(
+        (t) => (
+          <div
+            className={`fixed right-4 top-20 sm:top-24 bg-white border border-green-200 shadow-2xl rounded-2xl p-5 w-80 sm:w-96 transform transition-all duration-500 ease-out ${
+              t.visible
+                ? "animate-enter translate-x-0 opacity-100"
+                : "animate-leave translate-x-full opacity-0"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-16 h-16 rounded-lg object-cover border"
+              />
+              <div>
+                <h3 className="font-semibold text-green-800 text-sm">
+                  {product.name}
+                </h3>
+                <p className="text-xs text-gray-500">
+                  ${product.price.toFixed(2)} added to cart
+                </p>
+              </div>
+            </div>
+
+            <hr className="my-3" />
+
+            <div className="text-sm text-gray-700">
+              <p className="font-semibold">
+                Cart Subtotal:{" "}
+                <span className="text-green-700">${subtotal.toFixed(2)}</span>
+              </p>
+              <p className="text-xs text-gray-500 mb-3">
+                {totalItems} item{totalItems > 1 ? "s" : ""} in cart
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <a
+                href="/cart"
+                className="bg-green-700 hover:bg-green-800 text-white text-sm py-2 rounded-lg font-medium text-center"
+              >
+                Proceed to Checkout ({totalItems} items)
+              </a>
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="border border-green-600 text-green-700 py-2 rounded-lg text-sm font-medium hover:bg-green-50"
+              >
+                Continue Shopping
+              </button>
+            </div>
+          </div>
+        ),
+        { duration: 6000 }
+      );
+
+      return updatedCart;
     });
   };
-
+   
   const updateQuantity = (productId, qty) => {
     setCart((prev) => ({
       ...prev,
@@ -94,7 +169,7 @@ const App = () => {
             </Link>
            */}
           </div>
-          <Link to="/cart" title="View Cart" className="relative mt-2 sm:mt-0">
+          <Link to="/cart" title="View Cart" className="relative mt-2 sm:mt-0 cart-icon-bounce">
             <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-3 bg-white text-green-700 text-xs font-bold rounded-full px-2">
