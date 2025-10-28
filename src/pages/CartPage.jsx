@@ -1,3 +1,4 @@
+import { supabase } from "../supabaseClient"; // ✅ import at top
 import { toast } from "react-hot-toast";
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -22,14 +23,42 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
   };
   
   const onApprove = async (data, actions) => {
-    const details = await actions.order.capture();
-    const name = details.payer.name.given_name;
+    try {
+      const details = await actions.order.capture();
 
-    // ✅ Modern toast notification
-    toast.success(`Payment completed by ${name}`);
+      const name = details.payer.name.given_name + " " + details.payer.name.surname;
+      const email = details.payer.email_address;
+      const amount = details.purchase_units[0].amount.value;
+      const currency = details.purchase_units[0].amount.currency_code;
+      const orderId = details.id;
 
-    // ✅ Redirect to success page
-    window.location.href = "/success";
+      // 🛒 Get cart items for storage
+      const items = Object.values(cart);
+
+      // ✅ Store in Supabase
+      const { error } = await supabase.from("orders").insert([
+        {
+          payer_name: name,
+          payer_email: email,
+          amount,
+          currency,
+          items,
+        },
+      ]);
+
+      if (error) {
+        console.error("Supabase insert error:", error);
+        toast.error("Order saved failed");
+      } else {
+        toast.success(`Payment completed by ${name}`);
+      }
+
+      // ✅ Redirect to success page
+      window.location.href = "/success";
+    } catch (err) {
+      console.error("PayPal approval error:", err);
+      toast.error("Something went wrong during checkout.");
+    }
   };
 
   return (
