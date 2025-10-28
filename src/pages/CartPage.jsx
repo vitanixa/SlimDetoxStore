@@ -57,15 +57,19 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
       }
 
       // ✅ Send confirmation emails
-      await sendOrderEmail({
-        id: orderId,
-        paypal_order_id: orderId,
-        payer_name: name,
-        payer_email: email,
-        amount,
-        currency,
-        items: cartItems,
-        shipping,
+      await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: orderId,
+          paypal_order_id: orderId,
+          payer_name: name,
+          payer_email: email,
+          amount,
+          currency,
+          items: cartItems,
+          shipping,
+        }),
       });
 
       toast.success(`Payment completed by ${name}`);
