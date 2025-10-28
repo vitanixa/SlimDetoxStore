@@ -2,7 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ✅ Base body styling */
 body {
   font-family: sans-serif;
   background-color: #f5f5dc;
 }
+
+/* ✅ Ensure toasts appear above everything */
+.react-hot-toast {
+  z-index: 9999 !important;
+}
+
+/* ✅ Slide-in / slide-out animation for Add-to-Cart toast */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.animate-enter {
+  animation: slideIn 0.4s ease-out forwards;
+}
+
+.animate-leave {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
+/* ✅ Cart icon bounce animation */
+@keyframes cartBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.cart-bounce {
+  animation: cartBounce 0.4s ease;
+}
+
