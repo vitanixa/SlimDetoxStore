@@ -1,3 +1,4 @@
+import { sendOrderEmail } from "../api/sendEmail";
 import { supabase } from "../supabaseClient"; // ✅ import at top
 import { toast } from "react-hot-toast";
 import React from 'react';
@@ -42,7 +43,8 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
           payer_email: email,
           amount,
           currency,
-          items,
+          paypal_order_id: orderId,
+          items: cartItems,
           created_at: new Date().toISOString(),
         },
       ]);
@@ -53,6 +55,22 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
       } else {
         toast.success(`Payment completed by ${name}`);
       }
+      if (error) {
+        console.error("Supabase insert error:", error);
+        toast.error("Order saved failed");
+      } else {
+        toast.success(`Payment completed by ${name}`);
+
+        // 📨 Send confirmation email
+        await sendOrderEmail({
+          id: orderId,
+          payer_name: name,
+          payer_email: email,
+          amount,
+          currency,
+          items: cartItems,
+        });
+
       // ✅ Clear cart (both local + state)
       localStorage.removeItem("cart");
       if (typeof updateQuantity === "function") {
