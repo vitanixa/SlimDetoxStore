@@ -64,11 +64,13 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
         // 📨 Send confirmation email
         await sendOrderEmail({
           id: orderId,
+          paypal_order_id: orderId,
           payer_name: name,
           payer_email: email,
           amount,
           currency,
-          items: cartItems,
+          items: cartItems, // ← ADD COMMA HERE
+          shipping, // ✅ now valid
         });
 
       // ✅ Clear cart (both local + state)
