@@ -1,4 +1,3 @@
-import { sendOrderEmail } from "../api/sendEmail";
 import { supabase } from "../supabaseClient";
 import { toast } from "react-hot-toast";
 import React from "react";
