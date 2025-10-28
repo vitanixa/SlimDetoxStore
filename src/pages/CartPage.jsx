@@ -39,24 +39,29 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
       const items = cartItems;
 
       console.log("🛒 Attempting Supabase insert...");
-      const { error } = await supabase.from("orders").insert([
-        {
-          payer_name: name,
-          payer_email: email,
-          amount,
-          currency,
-          paypal_order_id: orderId,
-          items, // ✅ now defined
-          shipping,
-          created_at: new Date().toISOString(),
-        },
-      ]);
+      const { data, error } = await supabase
+        .from("orders")
+        .insert([
+          {
+            payer_name: name,
+            payer_email: email,
+            amount,
+            currency,
+            paypal_order_id: orderId,
+            items,
+            shipping,
+            created_at: new Date().toISOString(),
+          },
+        ])
+        .select();
 
       if (error) {
-        console.error("❌ Supabase insert error:", error);
+        console.error("❌ Supabase insert error:", error.message, error.details, error.hint);
         toast.error("Failed to save order.");
         return;
       }
+
+      console.log("✅ Order saved:", data);
 
       console.log("📧 Sending email via /api/sendEmail...");
       const res = await fetch("/api/sendEmail", {
