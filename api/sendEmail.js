@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
     // 📨 Send to buyer
     await resend.emails.send({
-      from: "Vitanixa <support@vitanixa.com>",
+      from: "Vitanixa <onboarding@resend.dev>",
       to: payer_email,
       subject: `Your Vitanixa Order #${paypal_order_id}`,
       html: `
