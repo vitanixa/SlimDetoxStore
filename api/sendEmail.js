@@ -1,12 +1,11 @@
 import { Resend } from "resend";
 
-// Initialize Resend with environment key or fallback (for testing)
-const resend = new Resend(
-  process.env.RESEND_API_KEY || "re_BMgMbTK9_JNAe7Lk3csbujG5yMpEixhVW"
-);
+// 🚨 TEMP FIX — directly using your Resend API key
+// ✅ Once this works, replace it with:  new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend("re_BMgMbTK9_JNAe7Lk3csbujG5yMpEixhVW");
 
 export default async function handler(req, res) {
-  // Only allow POST requests
+  // Allow only POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -14,12 +13,12 @@ export default async function handler(req, res) {
   try {
     const { payer_name, payer_email, amount, currency, items, shipping } = req.body;
 
-    // Safety checks
+    // Validation
     if (!payer_email) {
       return res.status(400).json({ error: "Missing payer_email" });
     }
 
-    // Build email body
+    // Build email HTML
     const itemsHtml = (items || [])
       .map(
         (item) =>
@@ -51,7 +50,7 @@ export default async function handler(req, res) {
 
     console.log("📧 Sending email via Resend for:", payer_email);
 
-    // Send email
+    // Send email via Resend
     const result = await resend.emails.send({
       from: "Slim Detox <support@vitanixa.com>",
       to: [payer_email, "support@vitanixa.com"], // send copy to store
