@@ -1,8 +1,8 @@
-import Stripe from "stripe";
+const Stripe = require("stripe");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -14,17 +14,16 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "No items provided" });
     }
 
+    const siteUrl = process.env.VITE_SITE_URL || "https://vitanixa.com";
+
     const lineItems = items.map((item) => ({
       price_data: {
         currency: "usd",
         product_data: {
           name: item.name,
-          images: item.image
-            ? [`${process.env.VITE_SITE_URL || "https://vitanixa.com"}${item.image}`]
-            : [],
-          description: `Vitanixa ${item.name} — Premium Herbal Tea Blend`,
+          description: `Vitanixa ${item.name} — 30 Premium Herbal Tea Bags`,
         },
-        unit_amount: Math.round(item.price * 100), // cents
+        unit_amount: Math.round(item.price * 100),
       },
       quantity: item.quantity,
     }));
@@ -42,36 +41,30 @@ export default async function handler(req, res) {
           shipping_rate_data: {
             type: "fixed_amount",
             fixed_amount: { amount: 0, currency: "usd" },
-            display_name: "Free Shipping",
-            delivery_estimate: {
-              minimum: { unit: "business_day", value: 5 },
-              maximum: { unit: "business_day", value: 7 },
-            },
+            display_name: "Free Shipping (5–7 business days)",
           },
         },
         {
           shipping_rate_data: {
             type: "fixed_amount",
             fixed_amount: { amount: 499, currency: "usd" },
-            display_name: "Standard Shipping",
-            delivery_estimate: {
-              minimum: { unit: "business_day", value: 3 },
-              maximum: { unit: "business_day", value: 5 },
-            },
+            display_name: "Standard Shipping (3–5 business days)",
           },
         },
       ],
-      success_url: `${process.env.VITE_SITE_URL || "https://vitanixa.com"}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.VITE_SITE_URL || "https://vitanixa.com"}/cancel`,
+      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/cancel`,
       metadata: {
         source: "vitanixa-store",
-        items: JSON.stringify(items.map(i => ({ id: i.id, name: i.name, qty: i.quantity }))),
+        items: JSON.stringify(
+          items.map((i) => ({ id: i.id, name: i.name, qty: i.quantity }))
+        ),
       },
     });
 
     return res.status(200).json({ url: session.url, sessionId: session.id });
   } catch (error) {
-    console.error("Stripe checkout error:", error);
+    console.error("Stripe checkout error:", error.message);
     return res.status(500).json({ error: error.message });
   }
-}
+};
