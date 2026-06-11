@@ -1,83 +1,35 @@
-// src/pages/SuccessPage.jsx
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { supabase } from "../supabaseClient";
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { CheckCircle, Leaf } from 'lucide-react';
 
-const SuccessPage = () => {
-  const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+const SuccessPage = ({ setCart }) => {
   useEffect(() => {
-    const fetchLatestOrder = async () => {
-      const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(1);
-
-      if (error) console.error("❌ Fetch error:", error);
-      else setOrder(data[0]);
-      setLoading(false);
-    };
-    fetchLatestOrder();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="max-w-3xl mx-auto p-8 text-center">
-        <p>Loading your order...</p>
-      </div>
-    );
-  }
+    localStorage.removeItem('vitanixa-cart');
+    if (setCart) setCart({});
+  }, [setCart]);
 
   return (
-    <div className="max-w-3xl mx-auto p-8 text-center">
-      <h1 className="text-4xl font-bold text-green-700 mb-4">Thank You! 🎉</h1>
-      <p className="text-lg mb-4">Your order has been successfully placed.</p>
-      {order && (
-        <div className="bg-white shadow-md rounded-xl p-6 mt-6 text-left">
-          <h2 className="text-xl font-semibold mb-2 text-green-800">
-            Order Summary
-          </h2>
-          <p className="text-sm text-gray-600 mb-1">
-            <strong>Order ID:</strong> {order.id}
-          </p>
-          <p className="text-sm text-gray-600 mb-1">
-            <strong>Date:</strong>{" "}
-            {new Date(order.created_at).toLocaleString()}
-          </p>
-          <p className="text-sm text-gray-600 mb-3">
-            <strong>Email:</strong> {order.payer_email}
-          </p>
-          <div className="divide-y">
-            {order.items.map((item, i) => (
-              <div key={i} className="py-2 flex justify-between">
-                <span>
-                  {item.name} × {item.quantity}
-                </span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
-              </div>
-            ))}
-          </div>
-          <div className="text-right font-bold mt-4">
-            Total: ${Number(order.amount).toFixed(2)} {order.currency}
-          </div>
+    <div className="min-h-[80vh] bg-[#FAF7F2] flex items-center justify-center px-6">
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-12 max-w-md w-full text-center space-y-6">
+        <div className="w-20 h-20 rounded-full bg-[#E8F0EB] flex items-center justify-center mx-auto">
+          <CheckCircle className="w-10 h-10 text-[#4A7C59]" />
         </div>
-      )}
-      <div className="mt-8">
-        <Link
-          to="/"
-          className="bg-green-700 text-white px-6 py-3 rounded hover:bg-green-800"
-        >
-          Back to Home
+        <div className="space-y-2">
+          <h1 className="font-serif text-3xl font-bold text-[#2E5240]">Order Confirmed!</h1>
+          <p className="text-slate-500 text-sm leading-relaxed">
+            Thank you for your order. A confirmation has been sent to your email. Your Vitanixa blends will be on their way soon!
+          </p>
+        </div>
+        <div className="bg-[#E8F0EB] rounded-2xl p-4 flex items-center gap-3 text-left">
+          <Leaf className="w-5 h-5 text-[#4A7C59] shrink-0" />
+          <p className="text-xs text-[#2E5240] font-semibold">Steep, sip, and start your wellness journey. Feel the difference in 7 days.</p>
+        </div>
+        <Link to="/" className="inline-block bg-[#4A7C59] text-white font-bold px-8 py-3.5 rounded-xl hover:bg-[#2E5240] transition-all text-sm">
+          Continue Shopping
         </Link>
       </div>
-      <p className="mt-4 text-sm text-gray-500">
-        Need help? Contact support@vitanixa.com
-      </p>
     </div>
   );
 };
 
 export default SuccessPage;
-

@@ -3,187 +3,138 @@ import { toast } from "react-hot-toast";
 import React from "react";
 import { Link } from "react-router-dom";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { Minus, Plus, Trash2, ShoppingBag, Leaf } from "lucide-react";
 
 const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
   const [{ isPending }] = usePayPalScriptReducer();
-
   const cartItems = Object.values(cart);
-  const total = cartItems
-    .reduce((sum, item) => sum + item.price * item.quantity, 0)
-    .toFixed(2);
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
-  const onCreateOrder = (data, actions) => {
-    return actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            value: total,
-          },
-        },
-      ],
-    });
-  };
+  const onCreateOrder = (data, actions) =>
+    actions.order.create({ purchase_units: [{ amount: { value: total } }] });
 
   const onApprove = async (data, actions) => {
     try {
       const details = await actions.order.capture();
-
       const name = `${details.payer.name.given_name} ${details.payer.name.surname}`;
       const email = details.payer.email_address;
       const amount = details.purchase_units[0].amount.value;
-      const currency = details.purchase_units[0].amount.currency_code;
       const orderId = details.id;
       const shipping = details.purchase_units[0].shipping || null;
 
-      // ✅ Fix: use cartItems from above
-      const items = cartItems;
+      await supabase.from("orders").insert([{
+        payer_name: name, payer_email: email, amount,
+        currency: "USD", paypal_order_id: orderId,
+        items: cartItems, shipping, created_at: new Date().toISOString(),
+      }]);
 
-      console.log("🛒 Attempting Supabase insert...");
-      const { data, error } = await supabase
-        .from("orders")
-        .insert([
-          {
-            payer_name: name,
-            payer_email: email,
-            amount,
-            currency,
-            paypal_order_id: orderId,
-            items,
-            shipping,
-            created_at: new Date().toISOString(),
-          },
-        ])
-        .select();
-
-      if (error) {
-        console.error("❌ Supabase insert error:", error.message, error.details, error.hint);
-        toast.error("Failed to save order.");
-        return;
-      }
-
-      console.log("✅ Order saved:", data);
-
-      console.log("📧 Sending email via /api/sendEmail...");
-      const res = await fetch("/api/sendEmail", {
+      await fetch("/api/sendEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: orderId,
-          paypal_order_id: orderId,
-          payer_name: name,
-          payer_email: email,
-          amount,
-          currency,
-          items,
-          shipping,
-        }),
+        body: JSON.stringify({ id: orderId, paypal_order_id: orderId, payer_name: name, payer_email: email, amount, currency: "USD", items: cartItems, shipping }),
       });
 
-      if (!res.ok) {
-        console.error("❌ Email API error:", await res.text());
-        toast.error("Email send failed.");
-        return;
-      }
-
-      toast.success(`Payment completed by ${name}`);
-
-      // ✅ Clear cart
+      toast.success(`Order confirmed! Thank you, ${name.split(' ')[0]} 🍃`);
       localStorage.removeItem("vitanixa-cart");
-      if (typeof updateQuantity === "function") {
-        Object.keys(cart).forEach((id) => updateQuantity(id, 0));
-      }
-
-      setTimeout(() => {
-        window.location.href = "/success";
-      }, 1500);
+      setTimeout(() => { window.location.href = "/success"; }, 1500);
     } catch (err) {
-      console.error("❌ PayPal approval error:", err);
-      toast.error("Something went wrong during checkout.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
+  if (cartItems.length === 0) return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 px-6 bg-[#FAF7F2]">
+      <div className="w-20 h-20 rounded-full bg-[#E8F0EB] flex items-center justify-center">
+        <ShoppingBag className="w-10 h-10 text-[#4A7C59]" />
+      </div>
+      <div className="text-center">
+        <h2 className="font-serif text-2xl font-bold text-[#2E5240]">Your cart is empty</h2>
+        <p className="text-slate-500 text-sm mt-2">Discover our herbal wellness blends</p>
+      </div>
+      <Link to="/" className="bg-[#4A7C59] text-white font-bold px-7 py-3 rounded-xl hover:bg-[#2E5240] transition-all text-sm">
+        Shop Now
+      </Link>
+    </div>
+  );
 
-      {cartItems.length === 0 ? (
-        <p>
-          Your cart is empty.{" "}
-          <Link to="/" className="text-green-700 underline">
-            Go back to shop
-          </Link>
-        </p>
-      ) : (
-        <>
-          <ul className="divide-y">
+  return (
+    <div className="bg-[#FAF7F2] min-h-screen py-12 px-6">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="font-serif text-3xl font-bold text-[#2E5240] mb-10">Your Cart</h1>
+
+        <div className="grid lg:grid-cols-3 gap-8 items-start">
+          {/* Items */}
+          <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => (
-              <li key={item.id} className="py-4 flex items-center gap-6">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-20 h-20 object-cover rounded shadow"
-                />
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p>${item.price.toFixed(2)}</p>
-                  <div className="flex items-center gap-3 mt-2">
-                    <input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        updateQuantity(item.id, Number(e.target.value))
-                      }
-                      className="border px-2 py-1 w-20 rounded"
-                    />
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      className="text-red-600 hover:underline text-sm"
-                    >
-                      Remove
+              <div key={item.id} className="bg-white rounded-2xl p-5 flex items-center gap-5 shadow-sm border border-slate-100">
+                <img src={item.image} alt={item.name} className="w-20 h-20 object-contain rounded-xl bg-[#E8F0EB] p-2" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-serif font-bold text-[#2E5240]">{item.name}</h3>
+                  <p className="text-sm text-slate-500">${item.price.toFixed(2)} each</p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <button onClick={() => item.quantity > 1 ? updateQuantity(item.id, item.quantity - 1) : removeFromCart(item.id)}
+                      className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
+                      <Minus className="w-3 h-3" />
+                    </button>
+                    <span className="w-8 text-center text-sm font-bold text-[#2E5240]">{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
+                      <Plus className="w-3 h-3" />
                     </button>
                   </div>
                 </div>
-                <div className="text-right font-semibold">
-                  ${(item.price * item.quantity).toFixed(2)}
+                <div className="text-right space-y-3">
+                  <p className="font-serif font-bold text-[#2E5240]">${(item.price * item.quantity).toFixed(2)}</p>
+                  <button onClick={() => removeFromCart(item.id)} className="text-slate-300 hover:text-red-500 transition-colors">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+            <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-[#4A7C59] hover:text-[#2E5240] mt-2 transition-colors">
+              ← Continue Shopping
+            </Link>
+          </div>
 
-          <div className="mt-8 text-right space-y-4">
-            <p className="text-xl font-bold">Total: ${total}</p>
-            <div className="mt-4">
-              <p className="text-sm text-gray-600 mb-2 text-center">
-                💳 Credit or Debit Cards accepted via PayPal – no PayPal account
-                needed.
+          {/* Summary */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-5 sticky top-24">
+            <h3 className="font-serif font-bold text-[#2E5240] text-lg border-b border-slate-100 pb-3">Order Summary</h3>
+            <div className="space-y-2 text-sm">
+              {cartItems.map(item => (
+                <div key={item.id} className="flex justify-between text-slate-600">
+                  <span>{item.name} × {item.quantity}</span>
+                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+              <div className="flex justify-between text-slate-600">
+                <span>Shipping</span>
+                <span className="text-[#4A7C59] font-semibold">{parseFloat(total) >= 30 ? 'Free' : '$4.99'}</span>
+              </div>
+              <div className="flex justify-between font-serif font-bold text-[#2E5240] text-base pt-2 border-t border-slate-100">
+                <span>Total</span>
+                <span>${total}</span>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <p className="text-[11px] text-center text-slate-400 flex items-center justify-center gap-1">
+                <Leaf className="w-3 h-3 text-[#4A7C59]" /> Secure checkout via PayPal — no account needed
               </p>
               {isPending ? (
-                <p className="text-center">Loading PayPal...</p>
+                <p className="text-center text-sm text-slate-400">Loading checkout…</p>
               ) : (
                 <PayPalButtons
-                  style={{ layout: "vertical" }}
+                  style={{ layout: "vertical", shape: "rect", color: "gold", label: "pay" }}
                   createOrder={onCreateOrder}
                   onApprove={onApprove}
-                  onError={(err) => {
-                    console.error("PayPal error:", err);
-                    alert("PayPal checkout failed.");
-                  }}
+                  onError={() => toast.error("PayPal checkout failed. Please try again.")}
                 />
               )}
             </div>
           </div>
-
-          <div className="mt-4 text-center">
-            <Link to="/" className="text-green-700 underline text-sm">
-              ← Continue Shopping
-            </Link>
-          </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
 
 export default CartPage;
-

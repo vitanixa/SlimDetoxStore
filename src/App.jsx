@@ -155,29 +155,38 @@ const App = () => {
       <Router>
         <Toaster position="top-center" />
         
-        {/* ✅ Sticky Mobile-Responsive Header */}
-        <header className="bg-green-700 text-white p-4 shadow flex flex-col sm:flex-row justify-between items-center sticky top-0 z-50">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-xl sm:text-2xl font-bold hover:underline">
-              Vitanixa-Herbal-Teas
-            </Link>
-           {/*
-            <Link to="/fitness" className="text-xl sm:text-2xl font-bold hover:underline">
-              Vitanixa-Workout-Videos
-            </Link>
-            <Link to="/fitness/programs" className="text-xl sm:text-2xl font-bold hover:underline">
-              Fitness-Programs
-            </Link>
-           */}
+        {/* Header */}
+        <header className="bg-[#2E5240] text-white sticky top-0 z-50 shadow-md">
+          {/* Announcement Bar */}
+          <div className="bg-[#C8973A] text-white text-center text-[11px] font-semibold py-2 px-4">
+            🍃 Free US shipping on orders over $30 &nbsp;·&nbsp; 100% Natural Herbal Blends
           </div>
-          <Link to="/cart" title="View Cart" className="relative mt-2 sm:mt-0 cart-icon-bounce">
-            <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-white text-green-700 text-xs font-bold rounded-full px-2">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <Link to="/" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#C8973A] flex items-center justify-center">
+                <span className="text-white font-bold text-xs">V</span>
+              </div>
+              <div className="leading-tight">
+                <p className="font-serif font-bold text-base">Vitanixa</p>
+                <p className="text-[9px] text-slate-300 uppercase tracking-widest">Herbal Wellness Teas</p>
+              </div>
+            </Link>
+            <nav className="hidden md:flex items-center gap-7 text-sm font-semibold text-slate-200">
+              <Link to="/" className="hover:text-white transition-colors">Shop</Link>
+              <Link to="/product/slim" className="hover:text-white transition-colors">SlimDetox</Link>
+              <Link to="/product/night" className="hover:text-white transition-colors">Night Blend</Link>
+              <Link to="/product/bundle" className="hover:text-white transition-colors">Bundle</Link>
+            </nav>
+            <Link to="/cart" className="relative cart-icon-bounce flex items-center gap-2 bg-[#C8973A] hover:bg-[#b5852f] text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all">
+              <ShoppingCart className="w-4 h-4" />
+              <span>Cart</span>
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-white text-[#2E5240] text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </header>
 
         {/* ✅ Route Pages */}
