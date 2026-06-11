@@ -155,29 +155,35 @@ const App = () => {
       <Router>
         <Toaster position="top-center" />
         
-        {/* ✅ Sticky Mobile-Responsive Header */}
-        <header className="bg-green-700 text-white p-4 shadow flex flex-col sm:flex-row justify-between items-center sticky top-0 z-50">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-xl sm:text-2xl font-bold hover:underline">
-              Vitanixa-Herbal-Teas
-            </Link>
-           {/*
-            <Link to="/fitness" className="text-xl sm:text-2xl font-bold hover:underline">
-              Vitanixa-Workout-Videos
-            </Link>
-            <Link to="/fitness/programs" className="text-xl sm:text-2xl font-bold hover:underline">
-              Fitness-Programs
-            </Link>
-           */}
+        {/* Header */}
+        <header style={{ background: 'rgba(13,31,21,0.97)', backdropFilter: 'blur(12px)', color: 'white', position: 'sticky', top: 0, zIndex: 50, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ background: '#C8973A', textAlign: 'center', fontSize: '12px', fontWeight: '600', padding: '8px 16px', letterSpacing: '0.03em' }}>
+            🍃 Free US shipping on orders over $30 &nbsp;·&nbsp; 100% Natural · Made in USA
           </div>
-          <Link to="/cart" title="View Cart" className="relative mt-2 sm:mt-0 cart-icon-bounce">
-            <ShoppingCart className="w-6 h-6 text-white hover:text-green-200 transition" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-white text-green-700 text-xs font-bold rounded-full px-2">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'white' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#C8973A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>🍃</div>
+              <div>
+                <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: '700', fontSize: '18px', margin: 0, color: 'white' }}>Vitanixa</p>
+                <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>Herbal Wellness</p>
+              </div>
+            </Link>
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+              <Link to="/" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>Shop</Link>
+              <Link to="/product/slim" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>SlimDetox</Link>
+              <Link to="/product/night" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>Night Blend</Link>
+              <Link to="/product/bundle" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>Bundle</Link>
+            </nav>
+            <Link to="/cart" className="cart-icon-bounce" style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px', background: '#C8973A', color: 'white', padding: '10px 20px', borderRadius: '12px', fontSize: '13px', fontWeight: '700', textDecoration: 'none' }}>
+              <ShoppingCart size={16} />
+              Cart
+              {cartCount > 0 && (
+                <span style={{ position: 'absolute', top: '-8px', right: '-8px', background: 'white', color: '#1a3328', fontSize: '10px', fontWeight: '800', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </header>
 
         {/* ✅ Route Pages */}
