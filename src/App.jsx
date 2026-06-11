@@ -156,32 +156,29 @@ const App = () => {
         <Toaster position="top-center" />
         
         {/* Header */}
-        <header className="bg-[#2E5240] text-white sticky top-0 z-50 shadow-md">
-          {/* Announcement Bar */}
-          <div className="bg-[#C8973A] text-white text-center text-[11px] font-semibold py-2 px-4">
-            🍃 Free US shipping on orders over $30 &nbsp;·&nbsp; 100% Natural Herbal Blends
+        <header style={{ background: 'rgba(13,31,21,0.97)', backdropFilter: 'blur(12px)', color: 'white', position: 'sticky', top: 0, zIndex: 50, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ background: '#C8973A', textAlign: 'center', fontSize: '12px', fontWeight: '600', padding: '8px 16px', letterSpacing: '0.03em' }}>
+            🍃 Free US shipping on orders over $30 &nbsp;·&nbsp; 100% Natural · Made in USA
           </div>
-          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#C8973A] flex items-center justify-center">
-                <span className="text-white font-bold text-xs">V</span>
-              </div>
-              <div className="leading-tight">
-                <p className="font-serif font-bold text-base">Vitanixa</p>
-                <p className="text-[9px] text-slate-300 uppercase tracking-widest">Herbal Wellness Teas</p>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'white' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#C8973A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>🍃</div>
+              <div>
+                <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: '700', fontSize: '18px', margin: 0, color: 'white' }}>Vitanixa</p>
+                <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>Herbal Wellness</p>
               </div>
             </Link>
-            <nav className="hidden md:flex items-center gap-7 text-sm font-semibold text-slate-200">
-              <Link to="/" className="hover:text-white transition-colors">Shop</Link>
-              <Link to="/product/slim" className="hover:text-white transition-colors">SlimDetox</Link>
-              <Link to="/product/night" className="hover:text-white transition-colors">Night Blend</Link>
-              <Link to="/product/bundle" className="hover:text-white transition-colors">Bundle</Link>
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+              <Link to="/" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>Shop</Link>
+              <Link to="/product/slim" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>SlimDetox</Link>
+              <Link to="/product/night" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>Night Blend</Link>
+              <Link to="/product/bundle" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>Bundle</Link>
             </nav>
-            <Link to="/cart" className="relative cart-icon-bounce flex items-center gap-2 bg-[#C8973A] hover:bg-[#b5852f] text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all">
-              <ShoppingCart className="w-4 h-4" />
-              <span>Cart</span>
+            <Link to="/cart" className="cart-icon-bounce" style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px', background: '#C8973A', color: 'white', padding: '10px 20px', borderRadius: '12px', fontSize: '13px', fontWeight: '700', textDecoration: 'none' }}>
+              <ShoppingCart size={16} />
+              Cart
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-white text-[#2E5240] text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center">
+                <span style={{ position: 'absolute', top: '-8px', right: '-8px', background: 'white', color: '#1a3328', fontSize: '10px', fontWeight: '800', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {cartCount}
                 </span>
               )}
