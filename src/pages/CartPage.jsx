@@ -1,15 +1,42 @@
 import { supabase } from "../supabaseClient";
 import { toast } from "react-hot-toast";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
-import { Minus, Plus, Trash2, ShoppingBag, Leaf } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Lock, CreditCard, ChevronRight } from "lucide-react";
 
 const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
   const [{ isPending }] = usePayPalScriptReducer();
-  const cartItems = Object.values(cart);
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+  const [stripeLoading, setStripeLoading] = useState(false);
+  const [checkoutMethod, setCheckoutMethod] = useState("stripe"); // "stripe" | "paypal"
 
+  const cartItems = Object.values(cart);
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shipping = subtotal >= 30 ? 0 : 4.99;
+  const total = (subtotal + shipping).toFixed(2);
+
+  // ── Stripe checkout ──
+  const handleStripeCheckout = async () => {
+    if (cartItems.length === 0) return;
+    setStripeLoading(true);
+    try {
+      const res = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cartItems }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error || "Checkout failed");
+      window.location.href = data.url;
+    } catch (err) {
+      console.error(err);
+      toast.error("Could not start Stripe checkout. Please try PayPal below.");
+    } finally {
+      setStripeLoading(false);
+    }
+  };
+
+  // ── PayPal handlers ──
   const onCreateOrder = (data, actions) =>
     actions.order.create({ purchase_units: [{ amount: { value: total } }] });
 
@@ -34,7 +61,7 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
         body: JSON.stringify({ id: orderId, paypal_order_id: orderId, payer_name: name, payer_email: email, amount, currency: "USD", items: cartItems, shipping }),
       });
 
-      toast.success(`Order confirmed! Thank you, ${name.split(' ')[0]} 🍃`);
+      toast.success(`Order confirmed! Thank you, ${name.split(" ")[0]} 🍃`);
       localStorage.removeItem("vitanixa-cart");
       setTimeout(() => { window.location.href = "/success"; }, 1500);
     } catch (err) {
@@ -42,94 +69,168 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
     }
   };
 
+  // ── Empty cart ──
   if (cartItems.length === 0) return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 px-6 bg-[#FAF7F2]">
-      <div className="w-20 h-20 rounded-full bg-[#E8F0EB] flex items-center justify-center">
-        <ShoppingBag className="w-10 h-10 text-[#4A7C59]" />
+    <div style={{ minHeight: "60vh", background: "#faf7f2", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px", padding: "48px 24px", fontFamily: "'Inter', sans-serif" }}>
+      <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: "#e8f0eb", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "36px" }}>🍃</div>
+      <div style={{ textAlign: "center" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "28px", fontWeight: "800", color: "#1a3328", margin: "0 0 8px" }}>Your cart is empty</h2>
+        <p style={{ color: "#64748b", fontSize: "14px", margin: 0 }}>Discover our herbal wellness blends</p>
       </div>
-      <div className="text-center">
-        <h2 className="font-serif text-2xl font-bold text-[#2E5240]">Your cart is empty</h2>
-        <p className="text-slate-500 text-sm mt-2">Discover our herbal wellness blends</p>
-      </div>
-      <Link to="/" className="bg-[#4A7C59] text-white font-bold px-7 py-3 rounded-xl hover:bg-[#2E5240] transition-all text-sm">
+      <Link to="/" style={{ background: "#1a3328", color: "white", padding: "14px 32px", borderRadius: "14px", fontSize: "14px", fontWeight: "700", textDecoration: "none" }}>
         Shop Now
       </Link>
     </div>
   );
 
   return (
-    <div className="bg-[#FAF7F2] min-h-screen py-12 px-6">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="font-serif text-3xl font-bold text-[#2E5240] mb-10">Your Cart</h1>
+    <div style={{ background: "#faf7f2", minHeight: "100vh", padding: "48px 24px", fontFamily: "'Inter', sans-serif" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "36px", fontWeight: "800", color: "#1a3328", marginBottom: "40px" }}>Your Cart</h1>
 
-        <div className="grid lg:grid-cols-3 gap-8 items-start">
-          {/* Items */}
-          <div className="lg:col-span-2 space-y-4">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: "32px", alignItems: "start" }}>
+
+          {/* ── Cart Items ── */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {cartItems.map((item) => (
-              <div key={item.id} className="bg-white rounded-2xl p-5 flex items-center gap-5 shadow-sm border border-slate-100">
-                <img src={item.image} alt={item.name} className="w-20 h-20 object-contain rounded-xl bg-[#E8F0EB] p-2" />
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-serif font-bold text-[#2E5240]">{item.name}</h3>
-                  <p className="text-sm text-slate-500">${item.price.toFixed(2)} each</p>
-                  <div className="flex items-center gap-2 mt-3">
+              <div key={item.id} style={{ background: "white", borderRadius: "20px", padding: "20px", display: "flex", alignItems: "center", gap: "20px", border: "1px solid #f0ebe3", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+                <div style={{ width: "80px", height: "80px", background: "#e8f0eb", borderRadius: "14px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <img src={item.image} alt={item.name} style={{ width: "70px", height: "70px", objectFit: "contain" }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: "700", color: "#1a3328", margin: "0 0 4px", fontSize: "17px" }}>{item.name}</h3>
+                  <p style={{ color: "#64748b", fontSize: "13px", margin: "0 0 12px" }}>${item.price.toFixed(2)} each · 30 tea bags</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <button onClick={() => item.quantity > 1 ? updateQuantity(item.id, item.quantity - 1) : removeFromCart(item.id)}
-                      className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
-                      <Minus className="w-3 h-3" />
+                      style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Minus size={13} />
                     </button>
-                    <span className="w-8 text-center text-sm font-bold text-[#2E5240]">{item.quantity}</span>
+                    <span style={{ width: "32px", textAlign: "center", fontWeight: "700", color: "#1a3328", fontSize: "14px" }}>{item.quantity}</span>
                     <button onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
-                      <Plus className="w-3 h-3" />
+                      style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Plus size={13} />
                     </button>
                   </div>
                 </div>
-                <div className="text-right space-y-3">
-                  <p className="font-serif font-bold text-[#2E5240]">${(item.price * item.quantity).toFixed(2)}</p>
-                  <button onClick={() => removeFromCart(item.id)} className="text-slate-300 hover:text-red-500 transition-colors">
-                    <Trash2 className="w-4 h-4" />
+                <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "12px" }}>
+                  <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: "800", color: "#1a3328", fontSize: "18px", margin: 0 }}>
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </p>
+                  <button onClick={() => removeFromCart(item.id)}
+                    style={{ background: "none", border: "none", cursor: "pointer", color: "#cbd5e1", padding: 0 }}
+                    onMouseEnter={e => e.currentTarget.style.color = "#ef4444"}
+                    onMouseLeave={e => e.currentTarget.style.color = "#cbd5e1"}>
+                    <Trash2 size={16} />
                   </button>
                 </div>
               </div>
             ))}
-            <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-[#4A7C59] hover:text-[#2E5240] mt-2 transition-colors">
+            <Link to="/" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "#4A7C59", fontSize: "13px", fontWeight: "600", textDecoration: "none", marginTop: "8px" }}>
               ← Continue Shopping
             </Link>
           </div>
 
-          {/* Summary */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-5 sticky top-24">
-            <h3 className="font-serif font-bold text-[#2E5240] text-lg border-b border-slate-100 pb-3">Order Summary</h3>
-            <div className="space-y-2 text-sm">
-              {cartItems.map(item => (
-                <div key={item.id} className="flex justify-between text-slate-600">
-                  <span>{item.name} × {item.quantity}</span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+          {/* ── Order Summary & Checkout ── */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "sticky", top: "100px" }}>
+
+            {/* Summary */}
+            <div style={{ background: "white", borderRadius: "20px", padding: "24px", border: "1px solid #f0ebe3", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+              <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: "700", color: "#1a3328", fontSize: "18px", margin: "0 0 20px", paddingBottom: "16px", borderBottom: "1px solid #f0ebe3" }}>
+                Order Summary
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "16px" }}>
+                {cartItems.map(item => (
+                  <div key={item.id} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "#64748b" }}>
+                    <span>{item.name} × {item.quantity}</span>
+                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  </div>
+                ))}
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "#64748b", paddingTop: "10px", borderTop: "1px solid #f0ebe3" }}>
+                  <span>Shipping</span>
+                  <span style={{ color: shipping === 0 ? "#4A7C59" : "#1a3328", fontWeight: "600" }}>
+                    {shipping === 0 ? "Free 🎉" : `$${shipping.toFixed(2)}`}
+                  </span>
                 </div>
-              ))}
-              <div className="flex justify-between text-slate-600">
-                <span>Shipping</span>
-                <span className="text-[#4A7C59] font-semibold">{parseFloat(total) >= 30 ? 'Free' : '$4.99'}</span>
+                <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "10px", borderTop: "2px solid #f0ebe3" }}>
+                  <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: "800", color: "#1a3328", fontSize: "17px" }}>Total</span>
+                  <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: "800", color: "#1a3328", fontSize: "17px" }}>${total}</span>
+                </div>
               </div>
-              <div className="flex justify-between font-serif font-bold text-[#2E5240] text-base pt-2 border-t border-slate-100">
-                <span>Total</span>
-                <span>${total}</span>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <p className="text-[11px] text-center text-slate-400 flex items-center justify-center gap-1">
-                <Leaf className="w-3 h-3 text-[#4A7C59]" /> Secure checkout via PayPal — no account needed
-              </p>
-              {isPending ? (
-                <p className="text-center text-sm text-slate-400">Loading checkout…</p>
-              ) : (
-                <PayPalButtons
-                  style={{ layout: "vertical", shape: "rect", color: "gold", label: "pay" }}
-                  createOrder={onCreateOrder}
-                  onApprove={onApprove}
-                  onError={() => toast.error("PayPal checkout failed. Please try again.")}
-                />
+              {subtotal < 30 && (
+                <div style={{ background: "#e8f0eb", borderRadius: "10px", padding: "10px 14px", fontSize: "12px", color: "#4A7C59", fontWeight: "600" }}>
+                  🍃 Add ${(30 - subtotal).toFixed(2)} more for free shipping!
+                </div>
               )}
             </div>
+
+            {/* Payment Method Toggle */}
+            <div style={{ background: "white", borderRadius: "20px", padding: "24px", border: "1px solid #f0ebe3", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "20px" }}>
+                <Lock size={14} style={{ color: "#4A7C59" }} />
+                <span style={{ fontSize: "12px", fontWeight: "700", color: "#4A7C59", textTransform: "uppercase", letterSpacing: "0.1em" }}>Secure Checkout</span>
+              </div>
+
+              {/* Method tabs */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "20px" }}>
+                <button
+                  onClick={() => setCheckoutMethod("stripe")}
+                  style={{ padding: "12px", borderRadius: "12px", border: checkoutMethod === "stripe" ? "2px solid #1a3328" : "2px solid #e2e8f0", background: checkoutMethod === "stripe" ? "#1a3328" : "white", color: checkoutMethod === "stripe" ? "white" : "#64748b", fontSize: "13px", fontWeight: "700", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+                >
+                  <CreditCard size={15} /> Card / Stripe
+                </button>
+                <button
+                  onClick={() => setCheckoutMethod("paypal")}
+                  style={{ padding: "12px", borderRadius: "12px", border: checkoutMethod === "paypal" ? "2px solid #003087" : "2px solid #e2e8f0", background: checkoutMethod === "paypal" ? "#003087" : "white", color: checkoutMethod === "paypal" ? "white" : "#64748b", fontSize: "13px", fontWeight: "700", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+                >
+                  <span style={{ fontWeight: "900", fontStyle: "italic" }}>P</span> PayPal
+                </button>
+              </div>
+
+              {/* Stripe checkout */}
+              {checkoutMethod === "stripe" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <button
+                    onClick={handleStripeCheckout}
+                    disabled={stripeLoading}
+                    style={{ width: "100%", background: stripeLoading ? "#94a3b8" : "#635BFF", color: "white", border: "none", padding: "16px", borderRadius: "14px", fontSize: "15px", fontWeight: "700", cursor: stripeLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", boxShadow: stripeLoading ? "none" : "0 8px 24px rgba(99,91,255,0.35)", transition: "all 0.2s" }}
+                  >
+                    {stripeLoading ? (
+                      "Redirecting to Stripe…"
+                    ) : (
+                      <><CreditCard size={18} /> Pay with Card — ${total}</>
+                    )}
+                  </button>
+                  <div style={{ display: "flex", justifyContent: "center", gap: "8px", flexWrap: "wrap" }}>
+                    {["Visa", "Mastercard", "Amex", "Discover", "Apple Pay", "Google Pay"].map(card => (
+                      <span key={card} style={{ fontSize: "10px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "6px", padding: "3px 8px", color: "#64748b", fontWeight: "600" }}>{card}</span>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: "11px", color: "#94a3b8", textAlign: "center", margin: 0 }}>
+                    🔒 Powered by Stripe — 256-bit SSL encryption
+                  </p>
+                </div>
+              )}
+
+              {/* PayPal checkout */}
+              {checkoutMethod === "paypal" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <p style={{ fontSize: "12px", color: "#64748b", textAlign: "center", margin: "0 0 4px" }}>
+                    No PayPal account needed — pay with any card
+                  </p>
+                  {isPending ? (
+                    <div style={{ textAlign: "center", color: "#64748b", fontSize: "13px", padding: "16px" }}>Loading PayPal…</div>
+                  ) : (
+                    <PayPalButtons
+                      style={{ layout: "vertical", shape: "rect", color: "blue", label: "pay" }}
+                      createOrder={onCreateOrder}
+                      onApprove={onApprove}
+                      onError={() => toast.error("PayPal checkout failed. Please try again.")}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
       </div>
