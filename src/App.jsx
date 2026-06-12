@@ -190,7 +190,7 @@ const App = () => {
         {/* ✅ Route Pages */}
         <main className="min-h-screen bg-beige text-green-900 font-sans">
           <Routes>
-            <Route path="/" element={<><HomePage cart={cart} addToCart={addToCart} /><Reviews /></>} />
+            <Route path="/" element={<HomePage cart={cart} addToCart={addToCart} />} />
             <Route path="/product/:id" element={<ProductPage addToCart={addToCart} />} />
             <Route path="/cart" element={
               <CartPage
