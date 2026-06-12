@@ -20,15 +20,19 @@ export default function Reviews({ limit = 3 }) {
   }, []);
 
   async function fetchReviews() {
-    const { data, error } = await supabase.from("reviews").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("*")
+      .eq("approved", true)
+      .order("created_at", { ascending: false });
     if (!error && data?.length) setReviews([...data, ...SEED_REVIEWS]);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.from("reviews").insert([form]);
-    if (!error) { setSubmitted(true); setForm({ name: "", comment: "", rating: 5 }); fetchReviews(); }
+    const { error } = await supabase.from("reviews").insert([{ ...form, approved: false }]);
+    if (!error) { setSubmitted(true); setForm({ name: "", comment: "", rating: 5 }); }
     setLoading(false);
   }
 
