@@ -16,8 +16,8 @@ module.exports = async function handler(req, res) {
 
     const siteUrl = process.env.VITE_SITE_URL || "https://vitanixa.com";
 
-    // Check if order contains the bundle
-    const hasBundle = items.some((i) => i.id === "bundle");
+    // Check if order contains any bundle (tea or moimoi)
+    const hasBundle = items.some((i) => i.id === "bundle" || i.id === "moimoi_bundle");
 
     // Calculate subtotal
     const subtotal = items.reduce(
@@ -25,8 +25,8 @@ module.exports = async function handler(req, res) {
       0
     );
 
-    // Free shipping if: has bundle OR order $42.50+ (bundle price)
-    const freeShipping = hasBundle || subtotal >= 42.50;
+    // Free shipping if: has any bundle OR order $37+ (moimoi bundle price)
+    const freeShipping = hasBundle || subtotal >= 37.00;
 
     const lineItems = items.map((item) => ({
       price_data: {
