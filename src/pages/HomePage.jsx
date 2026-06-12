@@ -258,7 +258,7 @@ const HomePage = ({ addToCart }) => {
           <div style={{ display: 'flex', gap: '16px' }}>
             <img src="/images/moimoi_yellow_pouch.jpg" alt="Yellow Moi-Moi Pouch"
               style={{ width: '48%', borderRadius: '20px', objectFit: 'cover', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }} />
-            <img src="/images/moimoi_blue_pouch.jpg" alt="Blue Moi-Moi Pouch"
+            <img src="/images/moimoi_blue_single.png" alt="Blue Moi-Moi Pouch"
               style={{ width: '48%', borderRadius: '20px', objectFit: 'cover', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', marginTop: '24px' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

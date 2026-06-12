@@ -35,7 +35,7 @@ const MoiMoiPage = ({ addToCart }) => {
       subtitle: 'Blue — Pack of 100',
       tagline: 'MOI-MOI MADE EASY',
       price: 20.00,
-      image: '/images/moimoi_blue_pouch.jpg',
+      image: '/images/moimoi_blue_single.png',
       color: '#1a3a8f',
       bg: '#0a0f2a',
       description: 'The original Moi-Moi cooking pouch — trusted by home cooks and caterers. Same great BPA-free quality, now in the classic blue style.',
@@ -56,7 +56,8 @@ const MoiMoiPage = ({ addToCart }) => {
     subtitle: 'Yellow + Blue — 200 Pouches Total',
     tagline: 'BEST VALUE',
     price: 37.00,
-    image: '/images/moimoi_yellow_pouch.jpg',
+    image: '/images/moimoi_blue_display.png',
+    image2: '/images/moimoi_yellow_pouch.jpg',
     color: '#2E5240',
     description: 'Get both styles — 100 yellow All Seasons + 100 blue Moi-Moi pouches. Best value for avid cooks and caterers.',
     highlights: [
@@ -126,9 +127,18 @@ const MoiMoiPage = ({ addToCart }) => {
 
           {/* Product image with variant toggle */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-            <div style={{ background: v.bg, borderRadius: '24px', padding: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-              <img src={v.image} alt={v.name}
-                style={{ height: '280px', objectFit: 'contain', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))' }} />
+            <div style={{ background: v.bg, borderRadius: '24px', padding: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: '340px', position: 'relative' }}>
+              {activeVariant === 'blue' ? (
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
+                  <img src="/images/moimoi_blue_single.png" alt="Blue Moi-Moi Pouch Front"
+                    style={{ height: '260px', objectFit: 'contain', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))' }} />
+                  <img src="/images/moimoi_blue_bulk.png" alt="Blue Moi-Moi Pouches Bulk"
+                    style={{ height: '200px', objectFit: 'contain', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.4))', opacity: 0.85 }} />
+                </div>
+              ) : (
+                <img src={v.image} alt={v.name}
+                  style={{ height: '280px', objectFit: 'contain', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))' }} />
+              )}
             </div>
             {/* Variant toggle */}
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -157,8 +167,17 @@ const MoiMoiPage = ({ addToCart }) => {
                 {product.id === 'moimoi_bundle' && (
                   <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#C8973A', color: 'white', fontSize: '10px', fontWeight: '800', padding: '4px 10px', borderRadius: '100px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Save $3</span>
                 )}
-                <img src={product.image} alt={product.name}
-                  style={{ height: '160px', objectFit: 'contain', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.4))' }} />
+                {product.id === 'moimoi_bundle' ? (
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <img src="/images/moimoi_yellow_pouch.jpg" alt="Yellow Pouch"
+                      style={{ height: '140px', objectFit: 'contain', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.4))', transform: 'rotate(-5deg)' }} />
+                    <img src="/images/moimoi_blue_single.png" alt="Blue Pouch"
+                      style={{ height: '140px', objectFit: 'contain', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.4))', transform: 'rotate(5deg)' }} />
+                  </div>
+                ) : (
+                  <img src={product.image} alt={product.name}
+                    style={{ height: '160px', objectFit: 'contain', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.4))' }} />
+                )}
               </div>
               <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1, gap: '12px' }}>
                 <div>
