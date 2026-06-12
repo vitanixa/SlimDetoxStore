@@ -251,6 +251,53 @@ const HomePage = ({ addToCart }) => {
         </div>
       </section>
 
+
+      {/* ── MOI-MOI SECTION ── */}
+      <section style={{ background: 'white', padding: '80px 24px', borderTop: '1px solid #f0ebe3' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <img src="/images/moimoi_yellow_pouch.jpg" alt="Yellow Moi-Moi Pouch"
+              style={{ width: '48%', borderRadius: '20px', objectFit: 'cover', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }} />
+            <img src="/images/moimoi_blue_pouch.jpg" alt="Blue Moi-Moi Pouch"
+              style={{ width: '48%', borderRadius: '20px', objectFit: 'cover', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', marginTop: '24px' }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <span style={{ display: 'inline-block', background: '#e8f0eb', color: '#4A7C59', fontSize: '11px', fontWeight: '700', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '6px 14px', borderRadius: '100px', width: 'fit-content' }}>
+              🫕 New — Kitchen Essentials
+            </span>
+            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(1.8rem, 3vw, 2.8rem)', fontWeight: '800', color: '#1a3328', margin: 0, lineHeight: '1.15' }}>
+              Moi-Moi Cooking Pouches.<br /><span style={{ color: '#C8973A' }}>No Mess. Perfect Results.</span>
+            </h2>
+            <p style={{ color: '#64748b', fontSize: '15px', lineHeight: '1.7', margin: 0 }}>
+              BPA-free pouches for Moi-Moi, Okpa, and steamed West African dishes. 100 pouches for just $20 — that&apos;s $0.20 per serving.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {['100 pouches per pack — only $0.20 each', 'BPA-free, food-safe, boil-safe material', 'Available in Yellow & Blue styles', 'Bundle both for $37 with free shipping'].map((perk, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#e8f0eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ color: '#4A7C59', fontSize: '10px', fontWeight: '900' }}>✓</span>
+                  </div>
+                  <span style={{ fontSize: '14px', color: '#475569', fontWeight: '500' }}>{perk}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
+              <button
+                onClick={() => navigate('/moi-moi')}
+                style={{ background: '#1a3328', color: 'white', border: 'none', padding: '14px 28px', borderRadius: '12px', fontSize: '14px', fontWeight: '700', cursor: 'pointer' }}
+                onMouseEnter={e => e.currentTarget.style.background = '#4A7C59'}
+                onMouseLeave={e => e.currentTarget.style.background = '#1a3328'}
+              >
+                Shop Moi-Moi Pouches →
+              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <p style={{ fontSize: '18px', fontWeight: '800', color: '#1a3328', margin: 0, fontFamily: "'Playfair Display', serif" }}>$20.00</p>
+                <p style={{ fontSize: '11px', color: '#94a3b8', margin: 0 }}>Pack of 100</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* ── FINAL CTA ── */}
       <section style={{ background: 'linear-gradient(135deg, #0d1f15, #1a3328)', color: 'white', padding: '100px 24px', textAlign: 'center' }}>
         <div style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '28px' }}>

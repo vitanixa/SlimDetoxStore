@@ -6,6 +6,7 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { ShoppingCart } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 import Reviews from "./pages/Reviews";
+import MoiMoiPage from "./pages/MoiMoiPage";
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
@@ -172,6 +173,7 @@ const App = () => {
               <Link to="/product/slim" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>SlimDetox</Link>
               <Link to="/product/night" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>Night Blend</Link>
               <Link to="/product/bundle" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: '500', textDecoration: 'none' }}>Bundle</Link>
+              <Link to="/moi-moi" style={{ color: '#C8973A', fontSize: '14px', fontWeight: '700', textDecoration: 'none' }}>🫕 Moi-Moi Pouches</Link>
             </nav>
             <Link to="/cart" className="cart-icon-bounce" style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px', background: '#C8973A', color: 'white', padding: '10px 20px', borderRadius: '12px', fontSize: '13px', fontWeight: '700', textDecoration: 'none' }}>
               <ShoppingCart size={16} />
@@ -198,7 +200,8 @@ const App = () => {
               />
             } />
             <Route path="/success" element={<SuccessPage setCart={setCart} />} />
-            <Route path="/cancel" element={<CancelPage />} />
+            <Route path="/moi-moi" element={<MoiMoiPage addToCart={addToCart} />} />
+        <Route path="/cancel" element={<CancelPage />} />
             <Route path="/fitness" element={<FitnessPage />} />
             <Route path="/fitness/upload" element={<FitnessUpload />} />
             <Route path="/fitness/programs/fat-burn-blast" element={<FatBurnBlast />} />
