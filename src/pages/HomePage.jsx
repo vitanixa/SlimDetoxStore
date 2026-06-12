@@ -226,32 +226,6 @@ const HomePage = ({ addToCart }) => {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section style={{ background: '#faf7f2', padding: '100px 24px' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ color: '#C8973A', fontSize: '11px', fontWeight: '700', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '12px' }}>Real Results</p>
-          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: '800', color: '#1a3328', margin: '0 0 48px' }}>
-            What Our Customers Say
-          </h2>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-            {testimonials.map((t, i) => (
-              <div key={i} style={{ background: 'white', borderRadius: '20px', padding: '28px', textAlign: 'left', border: '1px solid #f0ebe3', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                <div style={{ display: 'flex', gap: '3px', marginBottom: '16px' }}>
-                  {[...Array(t.stars)].map((_, j) => <Star key={j} size={14} style={{ fill: '#C8973A', color: '#C8973A' }} />)}
-                </div>
-                <p style={{ color: '#475569', fontSize: '14px', lineHeight: '1.7', fontStyle: 'italic', margin: '0 0 20px' }}>"{t.text}"</p>
-                <div style={{ borderTop: '1px solid #f0ebe3', paddingTop: '16px' }}>
-                  <p style={{ fontWeight: '700', color: '#1a3328', fontSize: '13px', margin: 0 }}>{t.name}</p>
-                  <p style={{ color: '#94a3b8', fontSize: '12px', margin: '2px 0 0' }}>{t.location}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
       {/* ── MOI-MOI SECTION ── */}
       <section style={{ background: 'white', padding: '80px 24px', borderTop: '1px solid #f0ebe3' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
@@ -298,6 +272,32 @@ const HomePage = ({ addToCart }) => {
           </div>
         </div>
       </section>
+      {/* ── TESTIMONIALS ── */}
+      <section style={{ background: '#faf7f2', padding: '100px 24px' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+          <p style={{ color: '#C8973A', fontSize: '11px', fontWeight: '700', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '12px' }}>Real Results</p>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: '800', color: '#1a3328', margin: '0 0 48px' }}>
+            What Our Customers Say
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+            {testimonials.map((t, i) => (
+              <div key={i} style={{ background: 'white', borderRadius: '20px', padding: '28px', textAlign: 'left', border: '1px solid #f0ebe3', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                <div style={{ display: 'flex', gap: '3px', marginBottom: '16px' }}>
+                  {[...Array(t.stars)].map((_, j) => <Star key={j} size={14} style={{ fill: '#C8973A', color: '#C8973A' }} />)}
+                </div>
+                <p style={{ color: '#475569', fontSize: '14px', lineHeight: '1.7', fontStyle: 'italic', margin: '0 0 20px' }}>"{t.text}"</p>
+                <div style={{ borderTop: '1px solid #f0ebe3', paddingTop: '16px' }}>
+                  <p style={{ fontWeight: '700', color: '#1a3328', fontSize: '13px', margin: 0 }}>{t.name}</p>
+                  <p style={{ color: '#94a3b8', fontSize: '12px', margin: '2px 0 0' }}>{t.location}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
       {/* ── FINAL CTA ── */}
       <section style={{ background: 'linear-gradient(135deg, #0d1f15, #1a3328)', color: 'white', padding: '100px 24px', textAlign: 'center' }}>
         <div style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '28px' }}>
