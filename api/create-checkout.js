@@ -16,6 +16,18 @@ module.exports = async function handler(req, res) {
 
     const siteUrl = process.env.VITE_SITE_URL || "https://vitanixa.com";
 
+    // Check if order contains the bundle
+    const hasBundle = items.some((i) => i.id === "bundle");
+
+    // Calculate subtotal
+    const subtotal = items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    // Free shipping if: has bundle OR order $42.50+ (bundle price)
+    const freeShipping = hasBundle || subtotal >= 42.50;
+
     const lineItems = items.map((item) => ({
       price_data: {
         currency: "usd",
@@ -28,6 +40,34 @@ module.exports = async function handler(req, res) {
       quantity: item.quantity,
     }));
 
+    const shippingOptions = freeShipping
+      ? [
+          {
+            shipping_rate_data: {
+              type: "fixed_amount",
+              fixed_amount: { amount: 0, currency: "usd" },
+              display_name: "Free Shipping 🎉 (5–7 business days)",
+              delivery_estimate: {
+                minimum: { unit: "business_day", value: 5 },
+                maximum: { unit: "business_day", value: 7 },
+              },
+            },
+          },
+        ]
+      : [
+          {
+            shipping_rate_data: {
+              type: "fixed_amount",
+              fixed_amount: { amount: 599, currency: "usd" },
+              display_name: "Standard Shipping (5–7 business days)",
+              delivery_estimate: {
+                minimum: { unit: "business_day", value: 5 },
+                maximum: { unit: "business_day", value: 7 },
+              },
+            },
+          },
+        ];
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -36,22 +76,7 @@ module.exports = async function handler(req, res) {
       shipping_address_collection: {
         allowed_countries: ["US", "CA"],
       },
-      shipping_options: [
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: { amount: 0, currency: "usd" },
-            display_name: "Free Shipping (5–7 business days)",
-          },
-        },
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: { amount: 499, currency: "usd" },
-            display_name: "Standard Shipping (3–5 business days)",
-          },
-        },
-      ],
+      shipping_options: shippingOptions,
       success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/cancel`,
       metadata: {

@@ -12,7 +12,8 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
 
   const cartItems = Object.values(cart);
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal >= 30 ? 0 : 4.99;
+  const hasBundle = cartItems.some((i) => i.id === "bundle");
+  const shipping = (hasBundle || subtotal >= 42.50) ? 0 : 5.99;
   const total = (subtotal + shipping).toFixed(2);
 
   // ── Stripe checkout ──
@@ -156,9 +157,9 @@ const CartPage = ({ cart, updateQuantity, removeFromCart }) => {
                   <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: "800", color: "#1a3328", fontSize: "17px" }}>${total}</span>
                 </div>
               </div>
-              {subtotal < 30 && (
+              {!hasBundle && subtotal < 42.50 && (
                 <div style={{ background: "#e8f0eb", borderRadius: "10px", padding: "10px 14px", fontSize: "12px", color: "#4A7C59", fontWeight: "600" }}>
-                  🍃 Add ${(30 - subtotal).toFixed(2)} more for free shipping!
+                  🍃 Get the bundle or add ${(42.50 - subtotal).toFixed(2)} more for free shipping!
                 </div>
               )}
             </div>
